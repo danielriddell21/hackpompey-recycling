@@ -1,7 +1,7 @@
+import 'package:barcode_scanner_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'screens/scanner_screen.dart';
-import 'screens/two_screen.dart';
 import 'screens/three_screen.dart';
 
 void main() => runApp(const EcoScanApp());
@@ -32,7 +32,7 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _screens = const [
     ScannerScreen(),
-    TwoScreen(),
+    RecyclingMapScreen(),
     ThreeScreen(),
   ];
 
