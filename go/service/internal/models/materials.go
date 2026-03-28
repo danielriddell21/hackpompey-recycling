@@ -22,19 +22,6 @@ type MaterialsDB struct {
 	Bins      map[string]Bin      `json:"bins"`
 }
 
-func (db MaterialsDB) BinIcon(bin string) string {
-	switch bin {
-	case "blue":
-		return "🔵"
-	case "black":
-		return "⚫"
-	case "recycling_centre":
-		return "♻️ "
-	default:
-		return "❓"
-	}
-}
-
 func (db MaterialsDB) LookupMaterials(offTags []string) []Material {
 	seen := map[string]bool{}
 	var results []Material

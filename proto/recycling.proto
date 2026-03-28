@@ -17,7 +17,7 @@ message RecyclingItem {
     enum BinType {
         BIN_TYPE_UNKNOWN = 0;
         PAPER = 1;
-        PLASTIC = 2;
+        RECYCLING = 2;
         GLASS = 3;
         WASTE = 4;
     }

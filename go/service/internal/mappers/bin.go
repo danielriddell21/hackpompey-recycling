@@ -24,9 +24,9 @@ func ToBinColour(bin string) pb.RecyclingItem_BinColour {
 func ToBinType(bin string) pb.RecyclingItem_BinType {
 	switch bin {
 	case "blue":
-		return pb.RecyclingItem_PLASTIC
-	case "green":
 		return pb.RecyclingItem_GLASS
+	case "green":
+		return pb.RecyclingItem_RECYCLING
 	case "brown":
 		return pb.RecyclingItem_PAPER
 	case "black":

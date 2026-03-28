@@ -59,7 +59,7 @@ const RecyclingItem_BinType$json = {
   '2': [
     {'1': 'BIN_TYPE_UNKNOWN', '2': 0},
     {'1': 'PAPER', '2': 1},
-    {'1': 'PLASTIC', '2': 2},
+    {'1': 'RECYCLING', '2': 2},
     {'1': 'GLASS', '2': 3},
     {'1': 'WASTE', '2': 4},
   ],
@@ -72,8 +72,8 @@ final $typed_data.Uint8List recyclingItemDescriptor = $convert.base64Decode(
     'bmdJdGVtLkJpbkNvbG91clIJYmluQ29sb3VyEjsKCGJpbl90eXBlGAQgASgOMiAucmVjeWNsaW'
     '5nLlJlY3ljbGluZ0l0ZW0uQmluVHlwZVIHYmluVHlwZSJOCglCaW5Db2xvdXISFgoSQklOX0NP'
     'TE9VUl9VTktOT1dOEAASCAoEQkxVRRABEgkKBUdSRUVOEAISCQoFQlJPV04QAxIJCgVCTEFDSx'
-    'AEIk0KB0JpblR5cGUSFAoQQklOX1RZUEVfVU5LTk9XThAAEgkKBVBBUEVSEAESCwoHUExBU1RJ'
-    'QxACEgkKBUdMQVNTEAMSCQoFV0FTVEUQBA==');
+    'AEIk8KB0JpblR5cGUSFAoQQklOX1RZUEVfVU5LTk9XThAAEgkKBVBBUEVSEAESDQoJUkVDWUNM'
+    'SU5HEAISCQoFR0xBU1MQAxIJCgVXQVNURRAE');
 
 @$core.Deprecated('Use canItBeRecycledRequestDescriptor instead')
 const CanItBeRecycledRequest$json = {

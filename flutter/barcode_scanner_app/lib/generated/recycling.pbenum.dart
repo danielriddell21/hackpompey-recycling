@@ -48,8 +48,8 @@ class RecyclingItem_BinType extends $pb.ProtobufEnum {
       RecyclingItem_BinType._(0, _omitEnumNames ? '' : 'BIN_TYPE_UNKNOWN');
   static const RecyclingItem_BinType PAPER =
       RecyclingItem_BinType._(1, _omitEnumNames ? '' : 'PAPER');
-  static const RecyclingItem_BinType PLASTIC =
-      RecyclingItem_BinType._(2, _omitEnumNames ? '' : 'PLASTIC');
+  static const RecyclingItem_BinType RECYCLING =
+      RecyclingItem_BinType._(2, _omitEnumNames ? '' : 'RECYCLING');
   static const RecyclingItem_BinType GLASS =
       RecyclingItem_BinType._(3, _omitEnumNames ? '' : 'GLASS');
   static const RecyclingItem_BinType WASTE =
@@ -59,7 +59,7 @@ class RecyclingItem_BinType extends $pb.ProtobufEnum {
       <RecyclingItem_BinType>[
     BIN_TYPE_UNKNOWN,
     PAPER,
-    PLASTIC,
+    RECYCLING,
     GLASS,
     WASTE,
   ];

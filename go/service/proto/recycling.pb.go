@@ -81,7 +81,7 @@ type RecyclingItem_BinType int32
 const (
 	RecyclingItem_BIN_TYPE_UNKNOWN RecyclingItem_BinType = 0
 	RecyclingItem_PAPER            RecyclingItem_BinType = 1
-	RecyclingItem_PLASTIC          RecyclingItem_BinType = 2
+	RecyclingItem_RECYCLING        RecyclingItem_BinType = 2
 	RecyclingItem_GLASS            RecyclingItem_BinType = 3
 	RecyclingItem_WASTE            RecyclingItem_BinType = 4
 )
@@ -91,14 +91,14 @@ var (
 	RecyclingItem_BinType_name = map[int32]string{
 		0: "BIN_TYPE_UNKNOWN",
 		1: "PAPER",
-		2: "PLASTIC",
+		2: "RECYCLING",
 		3: "GLASS",
 		4: "WASTE",
 	}
 	RecyclingItem_BinType_value = map[string]int32{
 		"BIN_TYPE_UNKNOWN": 0,
 		"PAPER":            1,
-		"PLASTIC":          2,
+		"RECYCLING":        2,
 		"GLASS":            3,
 		"WASTE":            4,
 	}
@@ -380,7 +380,7 @@ var File_proto_recycling_proto protoreflect.FileDescriptor
 
 const file_proto_recycling_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/recycling.proto\x12\trecycling\"\xe6\x02\n" +
+	"\x15proto/recycling.proto\x12\trecycling\"\xe8\x02\n" +
 	"\rRecyclingItem\x12\x1e\n" +
 	"\n" +
 	"recyclable\x18\x01 \x01(\bR\n" +
@@ -394,11 +394,11 @@ const file_proto_recycling_proto_rawDesc = "" +
 	"\x04BLUE\x10\x01\x12\t\n" +
 	"\x05GREEN\x10\x02\x12\t\n" +
 	"\x05BROWN\x10\x03\x12\t\n" +
-	"\x05BLACK\x10\x04\"M\n" +
+	"\x05BLACK\x10\x04\"O\n" +
 	"\aBinType\x12\x14\n" +
 	"\x10BIN_TYPE_UNKNOWN\x10\x00\x12\t\n" +
-	"\x05PAPER\x10\x01\x12\v\n" +
-	"\aPLASTIC\x10\x02\x12\t\n" +
+	"\x05PAPER\x10\x01\x12\r\n" +
+	"\tRECYCLING\x10\x02\x12\t\n" +
 	"\x05GLASS\x10\x03\x12\t\n" +
 	"\x05WASTE\x10\x04\"2\n" +
 	"\x16CanItBeRecycledRequest\x12\x18\n" +
