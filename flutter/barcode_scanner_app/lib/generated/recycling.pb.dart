@@ -1,0 +1,232 @@
+// This is a generated file - do not edit.
+//
+// Generated from recycling.proto.
+
+// @dart = 3.3
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+
+import 'dart:core' as $core;
+
+import 'package:protobuf/protobuf.dart' as $pb;
+
+import 'recycling.pbenum.dart';
+
+export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'recycling.pbenum.dart';
+
+/// Messages for recycling items
+class RecyclingItem extends $pb.GeneratedMessage {
+  factory RecyclingItem({
+    $core.bool? recyclable,
+    $core.String? advice,
+    RecyclingItem_BinColour? binColour,
+    RecyclingItem_BinType? binType,
+  }) {
+    final result = create();
+    if (recyclable != null) result.recyclable = recyclable;
+    if (advice != null) result.advice = advice;
+    if (binColour != null) result.binColour = binColour;
+    if (binType != null) result.binType = binType;
+    return result;
+  }
+
+  RecyclingItem._();
+
+  factory RecyclingItem.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RecyclingItem.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RecyclingItem',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'recycling'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'recyclable')
+    ..aOS(2, _omitFieldNames ? '' : 'advice')
+    ..aE<RecyclingItem_BinColour>(3, _omitFieldNames ? '' : 'binColour',
+        enumValues: RecyclingItem_BinColour.values)
+    ..aE<RecyclingItem_BinType>(4, _omitFieldNames ? '' : 'binType',
+        enumValues: RecyclingItem_BinType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RecyclingItem clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RecyclingItem copyWith(void Function(RecyclingItem) updates) =>
+      super.copyWith((message) => updates(message as RecyclingItem))
+          as RecyclingItem;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RecyclingItem create() => RecyclingItem._();
+  @$core.override
+  RecyclingItem createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static RecyclingItem getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RecyclingItem>(create);
+  static RecyclingItem? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get recyclable => $_getBF(0);
+  @$pb.TagNumber(1)
+  set recyclable($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRecyclable() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRecyclable() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get advice => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set advice($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAdvice() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAdvice() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  RecyclingItem_BinColour get binColour => $_getN(2);
+  @$pb.TagNumber(3)
+  set binColour(RecyclingItem_BinColour value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBinColour() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBinColour() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  RecyclingItem_BinType get binType => $_getN(3);
+  @$pb.TagNumber(4)
+  set binType(RecyclingItem_BinType value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBinType() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBinType() => $_clearField(4);
+}
+
+class CanItBeRecycledRequest extends $pb.GeneratedMessage {
+  factory CanItBeRecycledRequest({
+    $core.String? barcode,
+  }) {
+    final result = create();
+    if (barcode != null) result.barcode = barcode;
+    return result;
+  }
+
+  CanItBeRecycledRequest._();
+
+  factory CanItBeRecycledRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CanItBeRecycledRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CanItBeRecycledRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'recycling'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'barcode')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledRequest copyWith(
+          void Function(CanItBeRecycledRequest) updates) =>
+      super.copyWith((message) => updates(message as CanItBeRecycledRequest))
+          as CanItBeRecycledRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledRequest create() => CanItBeRecycledRequest._();
+  @$core.override
+  CanItBeRecycledRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CanItBeRecycledRequest>(create);
+  static CanItBeRecycledRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get barcode => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set barcode($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBarcode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBarcode() => $_clearField(1);
+}
+
+class CanItBeRecycledResponse extends $pb.GeneratedMessage {
+  factory CanItBeRecycledResponse({
+    RecyclingItem? data,
+  }) {
+    final result = create();
+    if (data != null) result.data = data;
+    return result;
+  }
+
+  CanItBeRecycledResponse._();
+
+  factory CanItBeRecycledResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CanItBeRecycledResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CanItBeRecycledResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'recycling'),
+      createEmptyInstance: create)
+    ..aOM<RecyclingItem>(1, _omitFieldNames ? '' : 'data',
+        subBuilder: RecyclingItem.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledResponse copyWith(
+          void Function(CanItBeRecycledResponse) updates) =>
+      super.copyWith((message) => updates(message as CanItBeRecycledResponse))
+          as CanItBeRecycledResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledResponse create() => CanItBeRecycledResponse._();
+  @$core.override
+  CanItBeRecycledResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CanItBeRecycledResponse>(create);
+  static CanItBeRecycledResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  RecyclingItem get data => $_getN(0);
+  @$pb.TagNumber(1)
+  set data(RecyclingItem value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasData() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearData() => $_clearField(1);
+  @$pb.TagNumber(1)
+  RecyclingItem ensureData() => $_ensure(0);
+}
+
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');
