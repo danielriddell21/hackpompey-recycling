@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-enum LearnCategory { plastic, glass, paper, metal, electronics, clothing }
+enum LearnCategory {
+  plastic,
+  glass,
+  clothing,
+  electronics,
+  metal,
+  paper,
+  foodWaste,
+}
 
 class LearnScreen extends StatefulWidget {
   const LearnScreen({super.key});
@@ -48,17 +56,58 @@ class _LearnScreenState extends State<LearnScreen> {
       Icons.checkroom_outlined,
       'Recycle clothes, shoes, and textiles via charity banks or local recycling points. Avoid wet or dirty items.',
     ),
+    LearnCategory.foodWaste: (
+      'Food Waste',
+      Colors.orange,
+      Icons.restaurant_outlined,
+      'Compost fruit, vegetable scraps, coffee grounds, and eggshells. Avoid meat and dairy in home compost if not suitable.',
+    ),
+  };
+
+  // Map keywords to relevant categories
+  static const Map<String, List<LearnCategory>> _keywordMap = {
+    'can': [LearnCategory.metal],
+    'tin': [LearnCategory.metal],
+    'bottle': [LearnCategory.plastic, LearnCategory.glass],
+    'jar': [LearnCategory.glass, LearnCategory.plastic],
+    'paper': [LearnCategory.paper],
+    'cardboard': [LearnCategory.paper],
+    'electronics': [LearnCategory.electronics],
+    'phone': [LearnCategory.electronics],
+    'laptop': [LearnCategory.electronics],
+    'clothes': [LearnCategory.clothing],
+    'textiles': [LearnCategory.clothing],
+    'sweets': [LearnCategory.plastic],
+    'wrapper': [LearnCategory.plastic],
+    'plastic': [LearnCategory.plastic],
+    'metal': [LearnCategory.metal],
+    'glass': [LearnCategory.glass],
+    'food': [LearnCategory.foodWaste],
+    'leftovers': [LearnCategory.foodWaste],
+    'banana': [LearnCategory.foodWaste],
+    'peel': [LearnCategory.foodWaste],
+    'compost': [LearnCategory.foodWaste],
+    'vegetable': [LearnCategory.foodWaste],
+    'fruit': [LearnCategory.foodWaste],
   };
 
   String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
-    // Filter categories based on search query
-    final filteredCategories = LearnCategory.values.where((cat) {
-      final label = _categoryMeta[cat]!.$1.toLowerCase();
-      return label.contains(_searchQuery.toLowerCase());
-    }).toList();
+    // If search query is empty, show all categories
+    List<LearnCategory> filteredCategories;
+    if (_searchQuery.isEmpty) {
+      filteredCategories = LearnCategory.values;
+    } else {
+      // Collect categories matching any keyword in the query
+      final query = _searchQuery.toLowerCase();
+      filteredCategories = _keywordMap.entries
+          .where((entry) => query.contains(entry.key))
+          .expand((entry) => entry.value)
+          .toSet() // remove duplicates
+          .toList();
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAF9),
@@ -68,13 +117,21 @@ class _LearnScreenState extends State<LearnScreen> {
             _buildHeader(),
             _buildSearchBar(),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-                children: filteredCategories.map((cat) {
-                  final (label, color, icon, advice) = _categoryMeta[cat]!;
-                  return _categoryCard(label, color, icon, advice);
-                }).toList(),
-              ),
+              child: filteredCategories.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No results found.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    )
+                  : ListView(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                      children: filteredCategories.map((cat) {
+                        final (label, color, icon, advice) =
+                            _categoryMeta[cat]!;
+                        return _categoryCard(label, color, icon, advice);
+                      }).toList(),
+                    ),
             ),
           ],
         ),
@@ -135,7 +192,7 @@ class _LearnScreenState extends State<LearnScreen> {
           });
         },
         decoration: InputDecoration(
-          hintText: 'Search at item to learn...',
+          hintText: 'Search item to recycle...',
           prefixIcon: const Icon(Icons.search),
           filled: true,
           fillColor: Colors.white,
