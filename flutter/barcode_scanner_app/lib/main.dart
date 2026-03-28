@@ -52,7 +52,7 @@ class _MainNavigationState extends State<MainNavigation> {
             icon: Icon(Icons.qr_code_scanner),
             label: 'Scan',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.eco), label: 'Two'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Search'),
           BottomNavigationBarItem(
             icon: Icon(Icons.delete_outline),
             label: 'Three',

@@ -526,45 +526,53 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
   // ── Map ───────────────────────────────────────────────────────────────────
 
   Widget _buildMap() {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      child: FlutterMap(
-        mapController: _mapController,
-        options: MapOptions(
-          initialCenter: _userLocation!,
-          initialZoom: 14.5,
-          onTap: (_, __) => _dismissSheet(),
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.ecoscan',
-          ),
-          MarkerLayer(markers: _buildMarkers()),
-          MarkerLayer(
-            markers: [
-              Marker(
-                point: _userLocation!,
-                width: 20,
-                height: 20,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppTheme.green600,
-                    border: Border.all(color: Colors.white, width: 2.5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.green600.withValues(alpha: 0.4),
-                        blurRadius: 8,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppTheme.green400, width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
               ),
             ],
           ),
-        ],
+          child: FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: _userLocation!,
+              initialZoom: 14.5,
+              onTap: (_, __) => _dismissSheet(),
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.example.ecoscan',
+              ),
+              MarkerLayer(markers: _buildMarkers()),
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: _userLocation!,
+                    width: 20,
+                    height: 20,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppTheme.green600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
