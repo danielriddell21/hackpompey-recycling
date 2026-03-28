@@ -34,12 +34,9 @@ class _ScannerScreenState extends State<ScannerScreen>
   @override
   void initState() {
     super.initState();
-
-    // TODO: Replace with actual endpoint
     _channel = ClientChannel(
       'organisable-luetta-nonblamefully.ngrok-free.dev',
       port: 443,
-      authority: 'organisable-luetta-nonblamefully.ngrok-free.dev',
       options: const ChannelOptions(credentials: ChannelCredentials.secure()),
     );
     _recyclingClient = RecyclingServiceClient(_channel);
@@ -86,24 +83,20 @@ class _ScannerScreenState extends State<ScannerScreen>
     });
 
     try {
-      // TODO: Replace with real gRPC call
-      await Future.delayed(
-        const Duration(milliseconds: 600),
-      ); // simulate latency
-
-      final mockItem = RecyclingItem(
-        recyclable: true,
-        advice: 'Rinse and remove the cap before placing in the correct bin.',
-        binColour: RecyclingItem_BinColour.GREEN,
-        binType: RecyclingItem_BinType.PLASTIC,
-      );
+      final request = CanItBeRecycledRequest(barcode: barcode);
+      final response = await _recyclingClient.canItBeRecycled(request);
 
       setState(() {
-        _lastResult = mockItem;
+        _lastResult = response.data;
         _isLoading = false;
       });
 
       _cardController.forward(from: 0);
+    } on GrpcError catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.message ?? 'Could not reach recycling service';
+      });
     } catch (e) {
       setState(() {
         _isLoading = false;
@@ -111,44 +104,6 @@ class _ScannerScreenState extends State<ScannerScreen>
       });
     }
   }
-
-  // Future<void> _onBarcodeDetected(String barcode) async {
-  //   if (barcode == _lastBarcode) return;
-
-  //   _lastBarcode = barcode;
-  //   _repeatCount = 1;
-  //   _totalScans++;
-
-  //   HapticFeedback.mediumImpact();
-  //   _ringController.forward(from: 0);
-
-  //   setState(() {
-  //     _isLoading = true;
-  //     _errorMessage = null;
-  //   });
-
-  //   try {
-  //     final request = CanItBeRecycledRequest(barcode: barcode);
-  //     final response = await _recyclingClient.canItBeRecycled(request);
-
-  //     setState(() {
-  //       _lastResult = response.data;
-  //       _isLoading = false;
-  //     });
-
-  //     _cardController.forward(from: 0);
-  //   } on GrpcError catch (e) {
-  //     setState(() {
-  //       _isLoading = false;
-  //       _errorMessage = e.message ?? 'Could not reach recycling service';
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       _isLoading = false;
-  //       _errorMessage = 'Something went wrong. Please try again.';
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
