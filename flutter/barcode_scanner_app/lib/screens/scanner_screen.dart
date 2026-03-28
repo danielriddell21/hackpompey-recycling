@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import '../models/scan_result.dart';
+import 'package:grpc/grpc.dart';
+
+import '../generated/recycling.pbgrpc.dart'; // generated service client
 import '../widgets/result_card.dart';
 import '../theme/app_theme.dart';
 
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
+
   @override
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
 class _ScannerScreenState extends State<ScannerScreen>
     with TickerProviderStateMixin {
-  ScanResult? _lastResult;
+  RecyclingItem? _lastResult;
   String? _lastBarcode;
   int _repeatCount = 0;
   int _totalScans = 0;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  late final RecyclingServiceClient _recyclingClient;
+  late final ClientChannel _channel;
 
   late final AnimationController _ringController;
   late final AnimationController _cardController;
@@ -27,6 +35,14 @@ class _ScannerScreenState extends State<ScannerScreen>
   void initState() {
     super.initState();
 
+    // TODO: Replace with actual endpoint
+    _channel = ClientChannel(
+      'your-api-host.example.com',
+      port: 443,
+      options: const ChannelOptions(credentials: ChannelCredentials.secure()),
+    );
+    _recyclingClient = RecyclingServiceClient(_channel);
+
     _ringController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -35,7 +51,6 @@ class _ScannerScreenState extends State<ScannerScreen>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-
     _ringOpacity = Tween(
       begin: 0.9,
       end: 0.0,
@@ -50,42 +65,89 @@ class _ScannerScreenState extends State<ScannerScreen>
   void dispose() {
     _ringController.dispose();
     _cardController.dispose();
+    _channel.shutdown();
     super.dispose();
   }
 
-  void _onBarcodeDetected(String barcode) {
-    if (barcode == _lastBarcode) {
-      return;
-    } else {
-      _repeatCount = 1;
-      _lastBarcode = barcode;
-    }
+  Future<void> _onBarcodeDetected(String barcode) async {
+    if (barcode == _lastBarcode) return;
+
+    _lastBarcode = barcode;
+    _repeatCount = 1;
     _totalScans++;
 
-    // Haptic feedback
     HapticFeedback.mediumImpact();
-
-    // Trigger animations
     _ringController.forward(from: 0);
-    _cardController.forward(from: 0);
 
-    final result = _mockLookup(barcode);
     setState(() {
-      _lastResult = result;
+      _isLoading = true;
+      _errorMessage = null;
     });
+
+    try {
+      // TODO: Replace with real gRPC call
+      await Future.delayed(
+        const Duration(milliseconds: 600),
+      ); // simulate latency
+
+      final mockItem = RecyclingItem(
+        recyclable: true,
+        advice: 'Rinse and remove the cap before placing in the correct bin.',
+        binColour: RecyclingItem_BinColour.GREEN,
+        binType: RecyclingItem_BinType.PLASTIC,
+      );
+
+      setState(() {
+        _lastResult = mockItem;
+        _isLoading = false;
+      });
+
+      _cardController.forward(from: 0);
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Something went wrong. Please try again.';
+      });
+    }
   }
 
-  //TODO: Replace with real API call
-  ScanResult _mockLookup(String barcode) {
-    return ScanResult(
-      barcode: barcode,
-      itemName: 'Plastic Bottle',
-      isRecyclable: true,
-      binColour: 'Yellow bin',
-      tip: 'Rinse and remove the cap before placing in the yellow bin.',
-      repeatCount: _repeatCount,
-    );
-  }
+  // Future<void> _onBarcodeDetected(String barcode) async {
+  //   if (barcode == _lastBarcode) return;
+
+  //   _lastBarcode = barcode;
+  //   _repeatCount = 1;
+  //   _totalScans++;
+
+  //   HapticFeedback.mediumImpact();
+  //   _ringController.forward(from: 0);
+
+  //   setState(() {
+  //     _isLoading = true;
+  //     _errorMessage = null;
+  //   });
+
+  //   try {
+  //     final request = CanItBeRecycledRequest(barcode: barcode);
+  //     final response = await _recyclingClient.canItBeRecycled(request);
+
+  //     setState(() {
+  //       _lastResult = response.data;
+  //       _isLoading = false;
+  //     });
+
+  //     _cardController.forward(from: 0);
+  //   } on GrpcError catch (e) {
+  //     setState(() {
+  //       _isLoading = false;
+  //       _errorMessage = e.message ?? 'Could not reach recycling service';
+  //     });
+  //   } catch (e) {
+  //     setState(() {
+  //       _isLoading = false;
+  //       _errorMessage = 'Something went wrong. Please try again.';
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +274,7 @@ class _ScannerScreenState extends State<ScannerScreen>
         child: child,
       ),
       child: AspectRatio(
-        aspectRatio: 1, // always square
+        aspectRatio: 1,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Stack(
@@ -258,9 +320,54 @@ class _ScannerScreenState extends State<ScannerScreen>
   }
 
   Widget _buildResultArea() {
+    if (_isLoading) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 32),
+        child: Center(
+          child: CircularProgressIndicator(
+            color: AppTheme.green600,
+            strokeWidth: 2,
+          ),
+        ),
+      );
+    }
+
+    if (_errorMessage != null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFF3F3),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFFFCDD2)),
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.error_outline,
+                color: Color(0xFFE57373),
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  _errorMessage!,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFFC62828),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (_lastResult == null) {
       return Padding(
-        padding: EdgeInsets.only(top: 16),
+        padding: const EdgeInsets.only(top: 16),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -298,6 +405,7 @@ class _ScannerScreenState extends State<ScannerScreen>
         ),
       );
     }
+
     return AnimatedBuilder(
       animation: _cardController,
       builder: (context, child) => Transform.translate(
@@ -307,7 +415,11 @@ class _ScannerScreenState extends State<ScannerScreen>
           child: child,
         ),
       ),
-      child: ResultCard(result: _lastResult!, repeatCount: _repeatCount),
+      child: ResultCard(
+        item: _lastResult!,
+        barcode: _lastBarcode!,
+        repeatCount: _repeatCount,
+      ),
     );
   }
 }
