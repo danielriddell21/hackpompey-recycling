@@ -1,0 +1,15 @@
+info:
+  name: Untitled
+  type: grpc
+  seq: 1
+
+grpc:
+  url: localhost:50051
+  method: /recycling.RecyclingService/CanItBeRecycled
+  methodType: unary
+  protoFilePath: ../proto/recycling.proto
+  message: |
+    {
+      "barcode": "3017620422003"
+    }
+  auth: inherit

@@ -4,7 +4,7 @@
 // - protoc             v7.34.0
 // source: proto/recycling.proto
 
-package recycling
+package proto
 
 import (
 	context "context"

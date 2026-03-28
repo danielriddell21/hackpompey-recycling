@@ -4,7 +4,7 @@
 // 	protoc        v7.34.0
 // source: proto/recycling.proto
 
-package recycling
+package proto
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -318,7 +318,7 @@ const file_proto_recycling_proto_rawDesc = "" +
 	"\x17CanItBeRecycledResponse\x12,\n" +
 	"\x04data\x18\x01 \x01(\v2\x18.recycling.RecyclingItemR\x04data2l\n" +
 	"\x10RecyclingService\x12X\n" +
-	"\x0fCanItBeRecycled\x12!.recycling.CanItBeRecycledRequest\x1a\".recycling.CanItBeRecycledResponseB<Z:github.com/riddler/hackpompey-recycling/go/proto/recyclingb\x06proto3"
+	"\x0fCanItBeRecycled\x12!.recycling.CanItBeRecycledRequest\x1a\".recycling.CanItBeRecycledResponseB\x19Z\x17recycling-service/protob\x06proto3"
 
 var (
 	file_proto_recycling_proto_rawDescOnce sync.Once

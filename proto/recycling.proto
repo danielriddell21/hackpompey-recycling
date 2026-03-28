@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package recycling;
 
-option go_package = "github.com/riddler/hackpompey-recycling/go/proto/recycling";
+option go_package = "recycling-service/proto";
 
 // Messages for recycling items
 message RecyclingItem {
