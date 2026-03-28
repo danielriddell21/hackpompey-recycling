@@ -14,7 +14,7 @@ import '../theme/app_theme.dart';
 // Model
 // ---------------------------------------------------------------------------
 
-enum RecyclingCategory { plastic, glass, paper, metal, electronics, clothing }
+enum RecyclingCategory { plastic, glass, clothing, electronics, metal, paper }
 
 class RecyclingPoint {
   final String id;
@@ -45,6 +45,15 @@ class RecyclingPoint {
     distanceKm: distanceKm ?? this.distanceKm,
   );
 }
+
+const Map<RecyclingCategory, Color> _categoryColors = {
+  RecyclingCategory.plastic: Colors.green,
+  RecyclingCategory.glass: Colors.blue,
+  RecyclingCategory.paper: Colors.teal,
+  RecyclingCategory.metal: Colors.grey,
+  RecyclingCategory.electronics: Colors.purple,
+  RecyclingCategory.clothing: Colors.pink,
+};
 
 // ---------------------------------------------------------------------------
 // Overpass API service
@@ -479,6 +488,12 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
 
   Widget _filterChip(RecyclingCategory? category, String label, IconData icon) {
     final active = _activeFilter == category;
+
+    // Pick the color for this category, default green for "All"
+    final baseColor = category != null
+        ? _categoryColors[category]!
+        : AppTheme.green600;
+
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
@@ -494,27 +509,23 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
-          color: active ? AppTheme.green600 : AppTheme.green100,
+          color: active ? baseColor : baseColor.withOpacity(0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: active ? AppTheme.green600 : AppTheme.green400,
+            color: active ? baseColor : baseColor.withOpacity(0.35),
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 14,
-              color: active ? Colors.white : AppTheme.green700,
-            ),
+            Icon(icon, size: 14, color: active ? Colors.white : baseColor),
             const SizedBox(width: 5),
             Text(
               label,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: active ? Colors.white : AppTheme.green700,
+                color: active ? Colors.white : baseColor,
               ),
             ),
           ],
@@ -580,6 +591,14 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
   List<Marker> _buildMarkers() {
     return _filteredPoints.map((point) {
       final isSelected = _selectedPoint?.id == point.id;
+
+      // If the point has multiple categories, just pick the first for the marker
+      final markerColor = isSelected
+          ? AppTheme.green600
+          : point.categories.isNotEmpty
+          ? _categoryColors[point.categories.first] ?? AppTheme.green600
+          : AppTheme.green600;
+
       return Marker(
         point: point.location,
         width: isSelected ? 44 : 36,
@@ -591,10 +610,7 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isSelected ? AppTheme.green600 : Colors.white,
-              border: Border.all(
-                color: isSelected ? AppTheme.green600 : AppTheme.green400,
-                width: isSelected ? 0 : 2,
-              ),
+              border: Border.all(color: markerColor, width: isSelected ? 0 : 2),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.15),
@@ -606,7 +622,7 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
             child: Icon(
               Icons.recycling_rounded,
               size: isSelected ? 22 : 18,
-              color: isSelected ? Colors.white : AppTheme.green600,
+              color: isSelected ? Colors.white : markerColor,
             ),
           ),
         ),
