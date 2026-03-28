@@ -2,7 +2,7 @@ import 'package:barcode_scanner_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'screens/scanner_screen.dart';
-import 'screens/three_screen.dart';
+import 'screens/learn_screen.dart';
 
 void main() => runApp(const EcoScanApp());
 
@@ -52,10 +52,10 @@ class _MainNavigationState extends State<MainNavigation> {
             icon: Icon(Icons.qr_code_scanner),
             label: 'Scan',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.eco), label: 'Two'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Search'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.delete_outline),
-            label: 'Three',
+            icon: Icon(Icons.lightbulb_outline),
+            label: 'Learn',
           ),
         ],
       ),
