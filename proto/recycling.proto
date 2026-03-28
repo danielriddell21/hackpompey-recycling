@@ -6,31 +6,37 @@ option go_package = "github.com/riddler/hackpompey-recycling/go/proto/recycling"
 
 // Messages for recycling items
 message RecyclingItem {
-  string id = 1;
-  string type = 2;
-  string description = 3;
-  string location = 4;
-  int64 created_at = 5;
+    enum BinColour {
+        BIN_COLOUR_UNKNOWN = 0;
+        BLUE = 1;
+        GREEN = 2;
+        BROWN = 3;
+        BLACK = 4;
+    }
+
+    enum BinType {
+        BIN_TYPE_UNKNOWN = 0;
+        PAPER = 1;
+        PLASTIC = 2;
+        GLASS = 3;
+        WASTE = 4;
+    }
+
+    bool recyclable = 1;
+    string advice = 2;
+    BinColour bin_colour = 3;
+    BinType bin_type = 4;
 }
 
-message GetRecyclingItemsRequest {
-  string location_filter = 1; // Optional filter by location
+message CanItBeRecycledRequest {
+  string barcode = 1;
 }
 
-message GetRecyclingItemsResponse {
-  repeated RecyclingItem items = 1;
-}
-
-message CreateRecyclingItemRequest {
-  RecyclingItem item = 1;
-}
-
-message CreateRecyclingItemResponse {
-  string id = 1;
+message CanItBeRecycledResponse {
+   RecyclingItem data = 1;
 }
 
 // Service definition
 service RecyclingService {
-  rpc GetRecyclingItems(GetRecyclingItemsRequest) returns (GetRecyclingItemsResponse);
-  rpc CreateRecyclingItem(CreateRecyclingItemRequest) returns (CreateRecyclingItemResponse);
+  rpc CanItBeRecycled(CanItBeRecycledRequest) returns (CanItBeRecycledResponse);
 }
