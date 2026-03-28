@@ -4,7 +4,6 @@ import (
 	_ "embed"
 	"encoding/json"
 	"log/slog"
-	"os"
 
 	"recycling-service/internal/models"
 	pb "recycling-service/proto"
@@ -21,16 +20,14 @@ type RecyclingServiceServer struct {
 }
 
 func MakeRecylingService() *RecyclingServiceServer {
-	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
-
 	// Load materials DB
 	var db models.MaterialsDB
 	if err := json.Unmarshal(materialsJSON, &db); err != nil {
-		logger.Error("failed to parse materials", "error", err)
+		slog.Error("failed to parse materials", "error", err)
 	}
 
 	return &RecyclingServiceServer{
-		logger: logger,
+		logger: slog.Default(),
 		Db:     db,
 	}
 }

@@ -12,18 +12,43 @@ import (
 	"google.golang.org/grpc"
 )
 
-func main() {
-	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+func init() {
+	// Set the default log level to info
+	slog.SetLogLoggerLevel(slog.LevelInfo)
 
+	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+	slog.SetDefault(logger)
+}
+
+func main() {
 	// Load environment variables
 	if err := godotenv.Load("../../.env.local"); err != nil {
-		logger.Warn("Warning: could not load .env.local", "error", err)
+		slog.Warn("Warning: could not load .env.local", "error", err)
 	}
+
+	logLevel := os.Getenv("LOG_LEVEL")
+	if logLevel == "" {
+		logLevel = "info"
+	}
+	slog.SetLogLoggerLevel(slog.Level(func() slog.Level {
+		switch logLevel {
+		case "debug":
+			return slog.LevelDebug
+		case "info":
+			return slog.LevelInfo
+		case "warn":
+			return slog.LevelWarn
+		case "error":
+			return slog.LevelError
+		default:
+			return slog.LevelInfo
+		}
+	}()))
 
 	// Create a listener on TCP port 50051
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
-		logger.Error("failed to listen", "error", err)
+		slog.Error("failed to listen", "error", err)
 	}
 
 	// Create a gRPC server object
@@ -34,8 +59,8 @@ func main() {
 	pb.RegisterRecyclingServiceServer(s, recyclingService)
 
 	// Start serving requests
-	logger.Info("server listening at", "address", lis.Addr())
+	slog.Info("server listening at", "address", lis.Addr())
 	if err := s.Serve(lis); err != nil {
-		logger.Error("failed to serve", "error", err)
+		slog.Error("failed to serve", "error", err)
 	}
 }
