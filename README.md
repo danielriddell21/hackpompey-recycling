@@ -25,3 +25,6 @@ This is a recycling app and service for portsmouth
 - `go/` - The Go service
 - `app/` - The Flutter app
 - `proto/` - The protobuf definitions
+
+
+![QR](QR-CODE.png)
