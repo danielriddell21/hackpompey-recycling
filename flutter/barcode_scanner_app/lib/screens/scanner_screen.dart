@@ -7,6 +7,8 @@ import '../generated/recycling.pbgrpc.dart'; // generated service client
 import '../widgets/result_card.dart';
 import '../theme/app_theme.dart';
 
+import 'package:image_picker/image_picker.dart'; // Add this
+
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
 
@@ -67,6 +69,43 @@ class _ScannerScreenState extends State<ScannerScreen>
     super.dispose();
   }
 
+  Future<void> _scanWithImage() async {
+    final picker = ImagePicker();
+    try {
+      final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+      if (photo == null) return; // User cancelled
+
+      final bytes = await photo.readAsBytes();
+
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      final request = CanItBeRecycledImageRequest(image: bytes);
+      final response = await _recyclingClient.canItBeRecycledImage(request);
+
+      setState(() {
+        _lastResult = response.data;
+        _lastBarcode = null; // image scan has no barcode
+        _isLoading = false;
+      });
+
+      _cardController.forward(from: 0);
+    } on GrpcError catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.message ?? 'Could not reach recycling service';
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        print('error scanning image: $e');
+        _errorMessage = 'Something went wrong. Please try again.';
+      });
+    }
+  }
+
   Future<void> _onBarcodeDetected(String barcode) async {
     if (barcode == _lastBarcode) return;
 
@@ -122,6 +161,22 @@ class _ScannerScreenState extends State<ScannerScreen>
                     _buildScanLabel(),
                     const SizedBox(height: 10),
                     _buildViewfinder(),
+                    const SizedBox(height: 8),
+                    ElevatedButton.icon(
+                      onPressed: _scanWithImage,
+                      label: const Text('✨ Try AI Scan'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.green600,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     _buildResultArea(),
                     const SizedBox(height: 12),
@@ -373,7 +428,7 @@ class _ScannerScreenState extends State<ScannerScreen>
       ),
       child: ResultCard(
         item: _lastResult!,
-        barcode: _lastBarcode!,
+        barcode: _lastBarcode ?? 'N/A', // fallback if barcode is null
         repeatCount: _repeatCount,
       ),
     );
