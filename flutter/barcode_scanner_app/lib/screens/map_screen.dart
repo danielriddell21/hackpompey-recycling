@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/app_theme.dart';
@@ -44,6 +47,116 @@ class RecyclingPoint {
 }
 
 // ---------------------------------------------------------------------------
+// Overpass API service
+// ---------------------------------------------------------------------------
+
+class _OverpassService {
+  static const _endpoint = 'https://overpass-api.de/api/interpreter';
+
+  // Maps OSM recycling:* tag values → our category enum
+  static const _tagMap = <String, RecyclingCategory>{
+    'plastic': RecyclingCategory.plastic,
+    'plastic_bottles': RecyclingCategory.plastic,
+    'glass': RecyclingCategory.glass,
+    'glass_bottles': RecyclingCategory.glass,
+    'paper': RecyclingCategory.paper,
+    'cardboard': RecyclingCategory.paper,
+    'metal': RecyclingCategory.metal,
+    'scrap_metal': RecyclingCategory.metal,
+    'electrical_items': RecyclingCategory.electronics,
+    'electronics': RecyclingCategory.electronics,
+    'small_appliances': RecyclingCategory.electronics,
+    'clothes': RecyclingCategory.clothing,
+    'shoes': RecyclingCategory.clothing,
+    'textiles': RecyclingCategory.clothing,
+  };
+
+  static Future<List<RecyclingPoint>> fetchNearby(
+    double lat,
+    double lon, {
+    int radiusMetres = 3000,
+  }) async {
+    final query =
+        '''
+[out:json][timeout:25];
+(
+  node["amenity"="recycling"](around:$radiusMetres,$lat,$lon);
+  node["recycling_type"="centre"](around:$radiusMetres,$lat,$lon);
+);
+out body;
+''';
+
+    final response = await http.post(
+      Uri.parse(_endpoint),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'data=${Uri.encodeComponent(query)}',
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Overpass API error ${response.statusCode}');
+    }
+
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    final elements = (json['elements'] as List<dynamic>?) ?? [];
+
+    final points = <RecyclingPoint>[];
+    for (final el in elements) {
+      final tags = (el['tags'] as Map<String, dynamic>?) ?? {};
+      final id = el['id'].toString();
+      final nodeLat = (el['lat'] as num?)?.toDouble();
+      final nodeLon = (el['lon'] as num?)?.toDouble();
+      if (nodeLat == null || nodeLon == null) continue;
+
+      // Derive categories from recycling:* = yes tags
+      final categories = <RecyclingCategory>{};
+      for (final entry in tags.entries) {
+        if (entry.key.startsWith('recycling:') && entry.value == 'yes') {
+          final material = entry.key.replaceFirst('recycling:', '');
+          final cat = _tagMap[material];
+          if (cat != null) categories.add(cat);
+        }
+      }
+      // Recycling centres accept everything
+      if (categories.isEmpty && tags['recycling_type'] == 'centre') {
+        categories.addAll(RecyclingCategory.values);
+      }
+
+      final name =
+          tags['name'] ??
+          tags['operator'] ??
+          (tags['recycling_type'] == 'centre'
+              ? 'Recycling Centre'
+              : 'Recycling Point');
+
+      final addrParts = <String>[
+        if (tags['addr:housenumber'] != null && tags['addr:street'] != null)
+          '${tags['addr:housenumber']} ${tags['addr:street']}',
+        if (tags['addr:street'] != null && tags['addr:housenumber'] == null)
+          tags['addr:street']!,
+        if (tags['addr:city'] != null) tags['addr:city']!,
+        if (tags['addr:postcode'] != null) tags['addr:postcode']!,
+      ];
+      final address = addrParts.isNotEmpty
+          ? addrParts.join(', ')
+          : '${nodeLat.toStringAsFixed(4)}, ${nodeLon.toStringAsFixed(4)}';
+
+      points.add(
+        RecyclingPoint(
+          id: id,
+          name: name,
+          location: LatLng(nodeLat, nodeLon),
+          categories: categories.toList(),
+          address: address,
+          openingHours: tags['opening_hours'] as String?,
+        ),
+      );
+    }
+
+    return points;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Screen
 // ---------------------------------------------------------------------------
 
@@ -60,7 +173,10 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
 
   LatLng? _userLocation;
   bool _locationLoading = true;
-  String? _locationError;
+
+  List<RecyclingPoint> _points = [];
+  bool _pointsLoading = false;
+  String? _pointsError;
 
   RecyclingPoint? _selectedPoint;
   RecyclingCategory? _activeFilter;
@@ -70,74 +186,9 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
   late final AnimationController _fabController;
   late final Animation<double> _fabScale;
 
-  // ── Mock data ─────────────────────────────────────────────────────────────
-  // Replace with a real API / gRPC call once your backend is ready.
-  static const List<RecyclingPoint> _mockPoints = [
-    RecyclingPoint(
-      id: '1',
-      name: 'Highbury Recycling Hub',
-      location: LatLng(51.5525, -0.1027),
-      categories: [
-        RecyclingCategory.plastic,
-        RecyclingCategory.glass,
-        RecyclingCategory.paper,
-      ],
-      address: '14 Highbury Grove, London N5 2EA',
-      openingHours: 'Mon–Sat  8 am – 6 pm',
-    ),
-    RecyclingPoint(
-      id: '2',
-      name: 'Islington Bottle Bank',
-      location: LatLng(51.5465, -0.1058),
-      categories: [RecyclingCategory.glass, RecyclingCategory.metal],
-      address: 'Islington Green Car Park, N1 8DU',
-      openingHours: 'Open 24 hours',
-    ),
-    RecyclingPoint(
-      id: '3',
-      name: 'Holloway Reuse Centre',
-      location: LatLng(51.5601, -0.1145),
-      categories: [
-        RecyclingCategory.electronics,
-        RecyclingCategory.clothing,
-        RecyclingCategory.plastic,
-      ],
-      address: '254 Holloway Road, London N7 6NE',
-      openingHours: 'Tue–Sun  9 am – 5 pm',
-    ),
-    RecyclingPoint(
-      id: '4',
-      name: 'Finsbury Park Drop-off',
-      location: LatLng(51.5642, -0.1050),
-      categories: [
-        RecyclingCategory.paper,
-        RecyclingCategory.plastic,
-        RecyclingCategory.metal,
-      ],
-      address: 'Finsbury Park Station, N4 2NQ',
-      openingHours: 'Mon–Fri  7 am – 8 pm',
-    ),
-    RecyclingPoint(
-      id: '5',
-      name: 'Canonbury E-Waste Point',
-      location: LatLng(51.5490, -0.0945),
-      categories: [RecyclingCategory.electronics],
-      address: 'Canonbury Square, N1 2AN',
-      openingHours: 'Mon–Sat  10 am – 4 pm',
-    ),
-    RecyclingPoint(
-      id: '6',
-      name: 'Upper Street Textiles',
-      location: LatLng(51.5442, -0.1026),
-      categories: [RecyclingCategory.clothing],
-      address: '112 Upper Street, London N1 1QN',
-      openingHours: 'Open 24 hours',
-    ),
-  ];
-
   List<RecyclingPoint> get _filteredPoints => _activeFilter == null
-      ? _mockPoints
-      : _mockPoints.where((p) => p.categories.contains(_activeFilter)).toList();
+      ? _points
+      : _points.where((p) => p.categories.contains(_activeFilter)).toList();
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -173,10 +224,7 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
   // ── Location ──────────────────────────────────────────────────────────────
 
   Future<void> _requestLocation() async {
-    setState(() {
-      _locationLoading = true;
-      _locationError = null;
-    });
+    setState(() => _locationLoading = true);
 
     try {
       LocationPermission permission = await Geolocator.checkPermission();
@@ -187,9 +235,7 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
           permission == LocationPermission.denied) {
         setState(() {
           _locationLoading = false;
-          _locationError = 'Location permission denied.';
-          // Fall back to central London
-          _userLocation = const LatLng(51.5074, -0.1278);
+          _pointsError = 'Location permission denied.';
         });
         return;
       }
@@ -197,25 +243,9 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
       final pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-
       if (!mounted) return;
+
       final userLatLng = LatLng(pos.latitude, pos.longitude);
-
-      // Annotate mock points with real distances
-      final annotated =
-          _mockPoints.map((p) {
-            final dist =
-                const Distance().as(
-                  LengthUnit.Kilometer,
-                  userLatLng,
-                  p.location,
-                ) /
-                1000;
-            return p.copyWith(distanceKm: dist);
-          }).toList()..sort(
-            (a, b) => (a.distanceKm ?? 9999).compareTo(b.distanceKm ?? 9999),
-          );
-
       setState(() {
         _userLocation = userLatLng;
         _locationLoading = false;
@@ -223,14 +253,53 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
 
       _mapController.move(userLatLng, 14.5);
       _fabController.forward();
-      print('Permission: $permission');
-      print('Position: ${pos.latitude}, ${pos.longitude}');
+
+      await _fetchRecyclingPoints(userLatLng);
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _locationLoading = false;
-        _locationError = 'Could not get location.';
-        _userLocation = const LatLng(51.5525, -0.1027);
+        _pointsError = 'Could not get location.';
+      });
+    }
+  }
+
+  Future<void> _fetchRecyclingPoints(LatLng centre) async {
+    setState(() {
+      _pointsLoading = true;
+      _pointsError = null;
+    });
+
+    try {
+      final raw = await _OverpassService.fetchNearby(
+        centre.latitude,
+        centre.longitude,
+        radiusMetres: 3000,
+      );
+      if (!mounted) return;
+
+      final dist = const Distance();
+      final annotated =
+          raw
+              .map(
+                (p) => p.copyWith(
+                  distanceKm: dist.as(LengthUnit.Kilometer, centre, p.location),
+                ),
+              )
+              .toList()
+            ..sort(
+              (a, b) => (a.distanceKm ?? 9999).compareTo(b.distanceKm ?? 9999),
+            );
+
+      setState(() {
+        _points = annotated;
+        _pointsLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _pointsLoading = false;
+        _pointsError = 'Could not load recycling points.';
       });
     }
   }
@@ -239,6 +308,13 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
     if (_userLocation == null) return;
     HapticFeedback.lightImpact();
     _mapController.move(_userLocation!, 15);
+  }
+
+  Future<void> _refresh() async {
+    if (_userLocation == null) return;
+    HapticFeedback.mediumImpact();
+    _dismissSheet();
+    await _fetchRecyclingPoints(_userLocation!);
   }
 
   // ── Marker selection ──────────────────────────────────────────────────────
@@ -256,11 +332,10 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
     });
   }
 
-  // ── Directions ────────────────────────────────────────────────────────────
-
   Future<void> _openDirections(RecyclingPoint point) async {
     final uri = Uri.parse(
-      'https://www.google.com/maps/dir/?api=1&destination=${point.location.latitude},${point.location.longitude}',
+      'https://www.google.com/maps/dir/?api=1'
+      '&destination=${point.location.latitude},${point.location.longitude}',
     );
     if (await canLaunchUrl(uri)) launchUrl(uri);
   }
@@ -277,13 +352,18 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
             _buildHeader(),
             _buildFilterRow(),
             Expanded(
-              child: Stack(
-                children: [
-                  _buildMap(),
-                  _buildFAB(),
-                  if (_selectedPoint != null) _buildBottomSheet(),
-                ],
-              ),
+              child: _locationLoading
+                  ? _buildCentredLoader('Getting your location…')
+                  : Stack(
+                      children: [
+                        _buildMap(),
+                        _buildFAB(),
+                        if (_pointsLoading) _buildMapLoader(),
+                        if (_pointsError != null && !_pointsLoading)
+                          _buildErrorBanner(),
+                        if (_selectedPoint != null) _buildBottomSheet(),
+                      ],
+                    ),
             ),
           ],
         ),
@@ -332,6 +412,23 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
             ),
           ),
           const Spacer(),
+          GestureDetector(
+            onTap: _refresh,
+            child: Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: AppTheme.green100,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.refresh_rounded,
+                size: 18,
+                color: AppTheme.green700,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
@@ -429,51 +526,44 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
   // ── Map ───────────────────────────────────────────────────────────────────
 
   Widget _buildMap() {
-    // Default centre: north London (near mock data)
-    final centre = _userLocation ?? const LatLng(51.5525, -0.1027);
-
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       child: FlutterMap(
         mapController: _mapController,
         options: MapOptions(
-          initialCenter: centre,
+          initialCenter: _userLocation!,
           initialZoom: 14.5,
           onTap: (_, __) => _dismissSheet(),
         ),
         children: [
-          // Tile layer – OSM (swap for a styled tiles URL if desired)
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.example.ecoscan',
           ),
-          // Recycling point markers
           MarkerLayer(markers: _buildMarkers()),
-          // User location dot
-          if (_userLocation != null)
-            MarkerLayer(
-              markers: [
-                Marker(
-                  point: _userLocation!,
-                  width: 20,
-                  height: 20,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppTheme.green600,
-                      border: Border.all(color: Colors.white, width: 2.5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.green600.withValues(alpha: 0.4),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                        ),
-                      ],
-                    ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: _userLocation!,
+                width: 20,
+                height: 20,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppTheme.green600,
+                    border: Border.all(color: Colors.white, width: 2.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.green600.withValues(alpha: 0.4),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -514,6 +604,107 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
         ),
       );
     }).toList();
+  }
+
+  // ── Overlays ──────────────────────────────────────────────────────────────
+
+  Widget _buildCentredLoader(String message) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CircularProgressIndicator(
+            color: AppTheme.green600,
+            strokeWidth: 2,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            message,
+            style: const TextStyle(fontSize: 13, color: Color(0xFFA1A19A)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMapLoader() {
+    return Positioned(
+      top: 12,
+      left: 0,
+      right: 0,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.10),
+                blurRadius: 12,
+              ),
+            ],
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 14,
+                height: 14,
+                child: CircularProgressIndicator(
+                  color: AppTheme.green600,
+                  strokeWidth: 2,
+                ),
+              ),
+              SizedBox(width: 8),
+              Text(
+                'Finding recycling points…',
+                style: TextStyle(fontSize: 12, color: Color(0xFF555550)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorBanner() {
+    return Positioned(
+      top: 12,
+      left: 16,
+      right: 16,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF3F3),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFFFFCDD2)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.error_outline, color: Color(0xFFE57373), size: 16),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                _pointsError!,
+                style: const TextStyle(fontSize: 12, color: Color(0xFFC62828)),
+              ),
+            ),
+            GestureDetector(
+              onTap: _refresh,
+              child: const Text(
+                'Retry',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.green600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // ── FAB ───────────────────────────────────────────────────────────────────
@@ -578,7 +769,6 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Drag handle
               Center(
                 child: Container(
                   margin: const EdgeInsets.only(top: 10),
@@ -595,7 +785,6 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Name + distance row
                     Row(
                       children: [
                         Expanded(
@@ -630,7 +819,6 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
                       ],
                     ),
                     const SizedBox(height: 6),
-                    // Address
                     Row(
                       children: [
                         const Icon(
@@ -650,7 +838,6 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
                         ),
                       ],
                     ),
-                    // Opening hours
                     if (point.openingHours != null) ...[
                       const SizedBox(height: 4),
                       Row(
@@ -661,27 +848,29 @@ class _RecyclingMapScreenState extends State<RecyclingMapScreen>
                             color: Color(0xFFA1A19A),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            point.openingHours!,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFFA1A19A),
+                          Expanded(
+                            child: Text(
+                              point.openingHours!,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFFA1A19A),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ],
-                    const SizedBox(height: 12),
-                    // Category chips
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: point.categories
-                          .map((c) => _categoryChip(c))
-                          .toList(),
-                    ),
+                    if (point.categories.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: point.categories
+                            .map((c) => _categoryChip(c))
+                            .toList(),
+                      ),
+                    ],
                     const SizedBox(height: 14),
-                    // Directions button
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton.icon(

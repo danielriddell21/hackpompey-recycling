@@ -34,9 +34,6 @@ class _ScannerScreenState extends State<ScannerScreen>
   @override
   void initState() {
     super.initState();
-
-    // TODO: Replace with actual endpoint
-
     _channel = ClientChannel(
       'organisable-luetta-nonblamefully.ngrok-free.dev',
       port: 443,
