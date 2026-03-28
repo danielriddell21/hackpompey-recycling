@@ -2,6 +2,23 @@ import 'package:flutter/material.dart';
 import '../generated/recycling.pb.dart';
 import '../theme/app_theme.dart';
 
+Color _binColourToColor(RecyclingItem_BinColour binColour) {
+  switch (binColour) {
+    case RecyclingItem_BinColour.GREEN:
+      return AppTheme.green100;
+    case RecyclingItem_BinColour.BROWN:
+      return AppTheme.brown100;
+    case RecyclingItem_BinColour.BLUE:
+      return AppTheme.blue100;
+    case RecyclingItem_BinColour.BLACK:
+      return AppTheme.grey100;
+    case RecyclingItem_BinColour.BIN_COLOUR_UNKNOWN:
+      return AppTheme.orange100;
+    default:
+      return AppTheme.orange100;
+  }
+}
+
 class ResultCard extends StatelessWidget {
   final RecyclingItem item;
   final String barcode;
@@ -17,9 +34,25 @@ class ResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isRecyclable = item.recyclable;
-    final colour = isRecyclable ? AppTheme.green100 : AppTheme.orange100;
+    final colour = item.hasBinColour()
+        ? _binColourToColor(item.binColour)
+        : AppTheme.orange100;
     final textColour = isRecyclable ? AppTheme.green600 : AppTheme.orange600;
     final label = isRecyclable ? 'Recyclable' : 'Not recyclable';
+    String message;
+
+    print('item bin type: ${item.binType.name}');
+    print('item bin colour: ${item.binColour.name}');
+
+    if (isRecyclable) {
+      message = 'YAY you can recycle me your ${item.binType.name} bin!';
+    } else if (item.binType == RecyclingItem_BinType.BIN_TYPE_UNKNOWN &&
+        item.binColour == RecyclingItem_BinColour.BIN_COLOUR_UNKNOWN) {
+      message =
+          'HUMMM… not sure if I’m recyclable yet. Go and click Learn to find out!';
+    } else {
+      message = 'OH NO this item is NOT recyclable';
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
@@ -41,7 +74,7 @@ class ResultCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            barcode,
+            message,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -81,7 +114,7 @@ class ResultCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    item.binColour.name,
+                    '${item.binType.name} BIN',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -95,7 +128,7 @@ class ResultCard extends StatelessWidget {
           if (item.hasBinType()) ...[
             const SizedBox(height: 6),
             Text(
-              'Bin type: ${item.binType.name}',
+              'Barcode: $barcode',
               style: TextStyle(
                 fontSize: 11,
                 color: textColour.withValues(alpha: 0.8),
