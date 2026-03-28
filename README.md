@@ -26,5 +26,5 @@ This is a recycling app and service for portsmouth
 - `app/` - The Flutter app
 - `proto/` - The protobuf definitions
 
-
-![QR](QR-CODE.png)
+## Android users: Scan the QR code to install the app and test it out!
+<img src="QR-CODE.png" alt="QR" width="400"/>
