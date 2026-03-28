@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RecyclingService_CanItBeRecycled_FullMethodName = "/recycling.RecyclingService/CanItBeRecycled"
+	RecyclingService_CanItBeRecycled_FullMethodName      = "/recycling.RecyclingService/CanItBeRecycled"
+	RecyclingService_CanItBeRecycledImage_FullMethodName = "/recycling.RecyclingService/CanItBeRecycledImage"
 )
 
 // RecyclingServiceClient is the client API for RecyclingService service.
@@ -29,6 +30,7 @@ const (
 // Service definition
 type RecyclingServiceClient interface {
 	CanItBeRecycled(ctx context.Context, in *CanItBeRecycledRequest, opts ...grpc.CallOption) (*CanItBeRecycledResponse, error)
+	CanItBeRecycledImage(ctx context.Context, in *CanItBeRecycledImageRequest, opts ...grpc.CallOption) (*CanItBeRecycledImageResponse, error)
 }
 
 type recyclingServiceClient struct {
@@ -49,6 +51,16 @@ func (c *recyclingServiceClient) CanItBeRecycled(ctx context.Context, in *CanItB
 	return out, nil
 }
 
+func (c *recyclingServiceClient) CanItBeRecycledImage(ctx context.Context, in *CanItBeRecycledImageRequest, opts ...grpc.CallOption) (*CanItBeRecycledImageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CanItBeRecycledImageResponse)
+	err := c.cc.Invoke(ctx, RecyclingService_CanItBeRecycledImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RecyclingServiceServer is the server API for RecyclingService service.
 // All implementations must embed UnimplementedRecyclingServiceServer
 // for forward compatibility.
@@ -56,6 +68,7 @@ func (c *recyclingServiceClient) CanItBeRecycled(ctx context.Context, in *CanItB
 // Service definition
 type RecyclingServiceServer interface {
 	CanItBeRecycled(context.Context, *CanItBeRecycledRequest) (*CanItBeRecycledResponse, error)
+	CanItBeRecycledImage(context.Context, *CanItBeRecycledImageRequest) (*CanItBeRecycledImageResponse, error)
 	mustEmbedUnimplementedRecyclingServiceServer()
 }
 
@@ -68,6 +81,9 @@ type UnimplementedRecyclingServiceServer struct{}
 
 func (UnimplementedRecyclingServiceServer) CanItBeRecycled(context.Context, *CanItBeRecycledRequest) (*CanItBeRecycledResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CanItBeRecycled not implemented")
+}
+func (UnimplementedRecyclingServiceServer) CanItBeRecycledImage(context.Context, *CanItBeRecycledImageRequest) (*CanItBeRecycledImageResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CanItBeRecycledImage not implemented")
 }
 func (UnimplementedRecyclingServiceServer) mustEmbedUnimplementedRecyclingServiceServer() {}
 func (UnimplementedRecyclingServiceServer) testEmbeddedByValue()                          {}
@@ -108,6 +124,24 @@ func _RecyclingService_CanItBeRecycled_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecyclingService_CanItBeRecycledImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CanItBeRecycledImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecyclingServiceServer).CanItBeRecycledImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecyclingService_CanItBeRecycledImage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecyclingServiceServer).CanItBeRecycledImage(ctx, req.(*CanItBeRecycledImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RecyclingService_ServiceDesc is the grpc.ServiceDesc for RecyclingService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -118,6 +152,10 @@ var RecyclingService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CanItBeRecycled",
 			Handler:    _RecyclingService_CanItBeRecycled_Handler,
+		},
+		{
+			MethodName: "CanItBeRecycledImage",
+			Handler:    _RecyclingService_CanItBeRecycledImage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

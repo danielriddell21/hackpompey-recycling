@@ -40,6 +40,13 @@ class RecyclingServiceClient extends $grpc.Client {
     return $createUnaryCall(_$canItBeRecycled, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.CanItBeRecycledImageResponse> canItBeRecycledImage(
+    $0.CanItBeRecycledImageRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$canItBeRecycledImage, request, options: options);
+  }
+
   // method descriptors
 
   static final _$canItBeRecycled =
@@ -47,6 +54,11 @@ class RecyclingServiceClient extends $grpc.Client {
           '/recycling.RecyclingService/CanItBeRecycled',
           ($0.CanItBeRecycledRequest value) => value.writeToBuffer(),
           $0.CanItBeRecycledResponse.fromBuffer);
+  static final _$canItBeRecycledImage = $grpc.ClientMethod<
+          $0.CanItBeRecycledImageRequest, $0.CanItBeRecycledImageResponse>(
+      '/recycling.RecyclingService/CanItBeRecycledImage',
+      ($0.CanItBeRecycledImageRequest value) => value.writeToBuffer(),
+      $0.CanItBeRecycledImageResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('recycling.RecyclingService')
@@ -63,6 +75,15 @@ abstract class RecyclingServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.CanItBeRecycledRequest.fromBuffer(value),
         ($0.CanItBeRecycledResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CanItBeRecycledImageRequest,
+            $0.CanItBeRecycledImageResponse>(
+        'CanItBeRecycledImage',
+        canItBeRecycledImage_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.CanItBeRecycledImageRequest.fromBuffer(value),
+        ($0.CanItBeRecycledImageResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CanItBeRecycledResponse> canItBeRecycled_Pre(
@@ -73,4 +94,13 @@ abstract class RecyclingServiceBase extends $grpc.Service {
 
   $async.Future<$0.CanItBeRecycledResponse> canItBeRecycled(
       $grpc.ServiceCall call, $0.CanItBeRecycledRequest request);
+
+  $async.Future<$0.CanItBeRecycledImageResponse> canItBeRecycledImage_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CanItBeRecycledImageRequest> $request) async {
+    return canItBeRecycledImage($call, await $request);
+  }
+
+  $async.Future<$0.CanItBeRecycledImageResponse> canItBeRecycledImage(
+      $grpc.ServiceCall call, $0.CanItBeRecycledImageRequest request);
 }

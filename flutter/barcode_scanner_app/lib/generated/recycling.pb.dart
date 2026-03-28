@@ -226,6 +226,124 @@ class CanItBeRecycledResponse extends $pb.GeneratedMessage {
   RecyclingItem ensureData() => $_ensure(0);
 }
 
+class CanItBeRecycledImageRequest extends $pb.GeneratedMessage {
+  factory CanItBeRecycledImageRequest({
+    $core.List<$core.int>? image,
+  }) {
+    final result = create();
+    if (image != null) result.image = image;
+    return result;
+  }
+
+  CanItBeRecycledImageRequest._();
+
+  factory CanItBeRecycledImageRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CanItBeRecycledImageRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CanItBeRecycledImageRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'recycling'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'image', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledImageRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledImageRequest copyWith(
+          void Function(CanItBeRecycledImageRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as CanItBeRecycledImageRequest))
+          as CanItBeRecycledImageRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledImageRequest create() =>
+      CanItBeRecycledImageRequest._();
+  @$core.override
+  CanItBeRecycledImageRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledImageRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CanItBeRecycledImageRequest>(create);
+  static CanItBeRecycledImageRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$core.int> get image => $_getN(0);
+  @$pb.TagNumber(1)
+  set image($core.List<$core.int> value) => $_setBytes(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasImage() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearImage() => $_clearField(1);
+}
+
+class CanItBeRecycledImageResponse extends $pb.GeneratedMessage {
+  factory CanItBeRecycledImageResponse({
+    RecyclingItem? data,
+  }) {
+    final result = create();
+    if (data != null) result.data = data;
+    return result;
+  }
+
+  CanItBeRecycledImageResponse._();
+
+  factory CanItBeRecycledImageResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CanItBeRecycledImageResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CanItBeRecycledImageResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'recycling'),
+      createEmptyInstance: create)
+    ..aOM<RecyclingItem>(1, _omitFieldNames ? '' : 'data',
+        subBuilder: RecyclingItem.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledImageResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledImageResponse copyWith(
+          void Function(CanItBeRecycledImageResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as CanItBeRecycledImageResponse))
+          as CanItBeRecycledImageResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledImageResponse create() =>
+      CanItBeRecycledImageResponse._();
+  @$core.override
+  CanItBeRecycledImageResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledImageResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CanItBeRecycledImageResponse>(create);
+  static CanItBeRecycledImageResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  RecyclingItem get data => $_getN(0);
+  @$pb.TagNumber(1)
+  set data(RecyclingItem value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasData() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearData() => $_clearField(1);
+  @$pb.TagNumber(1)
+  RecyclingItem ensureData() => $_ensure(0);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

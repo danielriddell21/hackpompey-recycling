@@ -9,10 +9,16 @@ import (
 	"recycling-service/internal/service"
 	pb "recycling-service/proto"
 
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
 func main() {
+	// Load environment variables
+	if err := godotenv.Load("../../.env.local"); err != nil {
+		log.Printf("Warning: could not load .env.local: %v", err)
+	}
+
 	// Load materials DB
 	var db models.MaterialsDB
 	if err := json.Unmarshal(service.MaterialsJSON, &db); err != nil {

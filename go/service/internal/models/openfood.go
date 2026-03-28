@@ -20,6 +20,8 @@ var offTagToMaterial = map[string]string{
 	"pet-bottle":     "plastic_bottle",
 	"hdpe-bottle":    "plastic_bottle",
 	"bottle":         "plastic_bottle", // generic fallback
+	"plastic bottle": "plastic_bottle",
+	"water bottle":   "plastic_bottle",
 	// Plastic tubs/trays
 	"plastic-tray": "plastic_tub",
 	"plastic-pot":  "plastic_tub",
@@ -41,12 +43,17 @@ var offTagToMaterial = map[string]string{
 	"glass-bottle": "glass_bottle",
 	"glass-jar":    "glass_bottle",
 	"jar":          "glass_bottle",
+	"glass bottle": "glass_bottle",
+	"wine bottle":  "glass_bottle",
 	// Cans
 	"tin":           "tin_can",
 	"steel-can":     "tin_can",
 	"aluminium-can": "tin_can",
 	"can":           "tin_can",
 	"metal-can":     "tin_can",
+	"aluminum can":  "tin_can",
+	"tin can":       "tin_can",
+	"steel can":     "tin_can",
 	// Foil
 	"aluminium-foil": "foil",
 	"foil-tray":      "foil",

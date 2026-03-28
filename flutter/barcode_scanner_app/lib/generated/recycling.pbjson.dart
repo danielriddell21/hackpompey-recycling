@@ -108,3 +108,37 @@ final $typed_data.Uint8List canItBeRecycledResponseDescriptor =
     $convert.base64Decode(
         'ChdDYW5JdEJlUmVjeWNsZWRSZXNwb25zZRIsCgRkYXRhGAEgASgLMhgucmVjeWNsaW5nLlJlY3'
         'ljbGluZ0l0ZW1SBGRhdGE=');
+
+@$core.Deprecated('Use canItBeRecycledImageRequestDescriptor instead')
+const CanItBeRecycledImageRequest$json = {
+  '1': 'CanItBeRecycledImageRequest',
+  '2': [
+    {'1': 'image', '3': 1, '4': 1, '5': 12, '10': 'image'},
+  ],
+};
+
+/// Descriptor for `CanItBeRecycledImageRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List canItBeRecycledImageRequestDescriptor =
+    $convert.base64Decode(
+        'ChtDYW5JdEJlUmVjeWNsZWRJbWFnZVJlcXVlc3QSFAoFaW1hZ2UYASABKAxSBWltYWdl');
+
+@$core.Deprecated('Use canItBeRecycledImageResponseDescriptor instead')
+const CanItBeRecycledImageResponse$json = {
+  '1': 'CanItBeRecycledImageResponse',
+  '2': [
+    {
+      '1': 'data',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.recycling.RecyclingItem',
+      '10': 'data'
+    },
+  ],
+};
+
+/// Descriptor for `CanItBeRecycledImageResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List canItBeRecycledImageResponseDescriptor =
+    $convert.base64Decode(
+        'ChxDYW5JdEJlUmVjeWNsZWRJbWFnZVJlc3BvbnNlEiwKBGRhdGEYASABKAsyGC5yZWN5Y2xpbm'
+        'cuUmVjeWNsaW5nSXRlbVIEZGF0YQ==');

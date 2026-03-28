@@ -36,7 +36,16 @@ message CanItBeRecycledResponse {
    RecyclingItem data = 1;
 }
 
+message CanItBeRecycledImageRequest {
+  bytes image = 1;
+}
+
+message CanItBeRecycledImageResponse {
+  RecyclingItem data = 1;
+}
+
 // Service definition
 service RecyclingService {
   rpc CanItBeRecycled(CanItBeRecycledRequest) returns (CanItBeRecycledResponse);
+  rpc CanItBeRecycledImage(CanItBeRecycledImageRequest) returns (CanItBeRecycledImageResponse);
 }
