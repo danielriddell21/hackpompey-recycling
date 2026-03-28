@@ -12,6 +12,9 @@ class AppTheme {
   static const Color orange600 = Color(0xFFC2410C);
   static const Color blue100 = Color(0xFFDBEAFE);
   static const Color blue600 = Color(0xFF1D4ED8);
+  static const Color brown100 = Color(0xFFFEF3C7);
+  static const Color brown600 = Color(0xFFA16207);
+  static const Color grey100 = Color(0xFFE5E7EB);
   static const Color bgPage = Color(0xFFF9FAFB);
 
   static ThemeData get theme => ThemeData(

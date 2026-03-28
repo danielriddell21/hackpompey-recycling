@@ -45,7 +45,7 @@
       "label": "Glass Bottles & Jars",
       "examples": ["wine bottle", "beer bottle", "jam jar", "sauce jar", "pickle jar"],
       "recyclable": "yes",
-      "bin": "green",
+      "bin": "blue",
       "tips": "Rinse clean. Lids can go in the green bin separately."
     },
     "glass_other": {
