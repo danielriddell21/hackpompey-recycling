@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"recycling-service/internal/mappers"
@@ -15,7 +16,7 @@ import (
 
 // CanItBeRecycled implements the CanItBeRecycled RPC method
 func (s *RecyclingServiceServer) CanItBeRecycled(ctx context.Context, req *pb.CanItBeRecycledRequest) (*pb.CanItBeRecycledResponse, error) {
-	s.logger.Info("Received barcode: %s", req.Barcode)
+	s.logger.Info("Received barcode", slog.String("barcode", req.Barcode))
 	barcode := strings.TrimSpace(req.Barcode)
 
 	// Fetch from Open Food Facts
