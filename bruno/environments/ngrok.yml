@@ -1,0 +1,4 @@
+name: ngrok
+variables:
+  - name: baseUrl
+    value: https://organisable-luetta-nonblamefully.ngrok-free.dev/

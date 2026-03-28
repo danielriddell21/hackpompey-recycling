@@ -1,10 +1,10 @@
 info:
-  name: Untitled
+  name: CanItBeRecycled
   type: grpc
   seq: 1
 
 grpc:
-  url: localhost:50051
+  url: "{{baseUrl}}"
   method: /recycling.RecyclingService/CanItBeRecycled
   methodType: unary
   protoFilePath: ../proto/recycling.proto
