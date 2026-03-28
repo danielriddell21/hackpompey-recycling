@@ -10,14 +10,14 @@
       "label": "Plastic Bottles (PET / HDPE)",
       "examples": ["water bottle", "fizzy drink bottle", "milk bottle", "shampoo bottle", "washing up liquid bottle"],
       "recyclable": "yes",
-      "bin": "blue",
+      "bin": "green",
       "tips": "Rinse out and squash flat. Leave lids on."
     },
     "plastic_tub": {
       "label": "Plastic Tubs, Trays & Pots",
       "examples": ["yoghurt pot", "margarine tub", "ready meal tray", "fruit punnet", "takeaway container (clear)"],
       "recyclable": "yes",
-      "bin": "blue",
+      "bin": "green",
       "tips": "Rinse clean before recycling."
     },
     "plastic_black": {
@@ -39,48 +39,48 @@
       "examples": ["polystyrene packaging", "foam cup", "foam food container", "packing peanuts"],
       "recyclable": "no",
       "bin": "black",
-      "tips": "Not accepted in Portsmouth blue bins."
+      "tips": "Not accepted in Portsmouth green bins."
     },
     "glass_bottle": {
       "label": "Glass Bottles & Jars",
       "examples": ["wine bottle", "beer bottle", "jam jar", "sauce jar", "pickle jar"],
       "recyclable": "yes",
-      "bin": "blue",
-      "tips": "Rinse clean. Lids can go in the blue bin separately."
+      "bin": "green",
+      "tips": "Rinse clean. Lids can go in the green bin separately."
     },
     "glass_other": {
       "label": "Non-bottle Glass (Pyrex, Ceramics, Drinking Glasses)",
       "examples": ["drinking glass", "Pyrex dish", "mug", "plate", "mirror", "window glass"],
       "recyclable": "no",
       "bin": "black",
-      "tips": "Different composition to bottle glass - cannot go in the blue bin. Wrap broken glass carefully."
+      "tips": "Different composition to bottle glass - cannot go in the green bin. Wrap broken glass carefully."
     },
     "tin_can": {
       "label": "Tins & Cans",
       "examples": ["baked bean tin", "soup can", "tuna can", "aluminium drinks can", "beer can", "food tin"],
       "recyclable": "yes",
-      "bin": "blue",
+      "bin": "green",
       "tips": "Rinse clean. Squash cans to save space."
     },
     "foil": {
       "label": "Aluminium Foil & Foil Trays",
       "examples": ["kitchen foil", "foil tray", "foil pie dish"],
       "recyclable": "yes",
-      "bin": "blue",
+      "bin": "green",
       "tips": "Scrunch into a ball - must be clean and free of food."
     },
     "paper": {
       "label": "Paper",
       "examples": ["newspaper", "magazine", "office paper", "junk mail", "envelopes", "shredded paper"],
       "recyclable": "yes",
-      "bin": "blue",
+      "bin": "green",
       "tips": "Put shredded paper in a sealed paper bag so it doesn't blow around."
     },
     "cardboard": {
       "label": "Cardboard",
       "examples": ["cereal box", "cardboard packaging", "egg box", "toilet roll tube", "pizza box (clean)"],
       "recyclable": "yes",
-      "bin": "blue",
+      "bin": "green",
       "tips": "Flatten boxes. Pizza boxes are fine if not heavily soiled with grease."
     },
     "cardboard_soiled": {
@@ -101,7 +101,7 @@
       "label": "Cartons (Tetra Pak)",
       "examples": ["juice carton", "milk carton", "soup carton", "oat milk carton"],
       "recyclable": "yes",
-      "bin": "blue",
+      "bin": "green",
       "tips": "Rinse clean and flatten."
     },
     "battery": {
@@ -143,7 +143,7 @@
       "label": "Aerosols",
       "examples": ["deodorant", "hairspray", "spray paint", "air freshener"],
       "recyclable": "yes",
-      "bin": "blue",
+      "bin": "green",
       "tips": "Ensure completely empty before recycling. Do not pierce or crush."
     },
     "metal_scrap": {
@@ -155,8 +155,8 @@
     }
   },
   "bins": {
-    "blue": {
-      "label": "Blue Bin",
+    "green": {
+      "label": "Green Bin",
       "description": "Portsmouth kerbside recycling collection",
       "collection": "Fortnightly"
     },
