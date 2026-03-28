@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"recycling-service/internal/mappers"
 	"recycling-service/internal/models"
@@ -18,7 +18,7 @@ import (
 
 // CanItBeRecycledImage implements the CanItBeRecycledImage RPC method
 func (s *RecyclingServiceServer) CanItBeRecycledImage(ctx context.Context, req *pb.CanItBeRecycledImageRequest) (*pb.CanItBeRecycledImageResponse, error) {
-	log.Printf("Received image for analysis, size: %d bytes", len(req.Image))
+	s.logger.Info("Received image for analysis", slog.Int("image_size", len(req.Image)))
 
 	// Encode image to base64
 	imageBase64 := base64.StdEncoding.EncodeToString(req.Image)
@@ -149,8 +149,6 @@ func (s *RecyclingServiceServer) CanItBeRecycledImage(ctx context.Context, req *
 		}
 	}
 
-	log.Printf("Claude response: %s", description)
-
 	// Parse JSON response
 	type ClaudeAnalysis struct {
 		Item string `json:"item"`
@@ -185,13 +183,28 @@ func (s *RecyclingServiceServer) CanItBeRecycledImage(ctx context.Context, req *
 
 	// Use the first matched material
 	m := matched[0]
+	s.logger.Debug("Identified item: %s, Recyclable: %s", analysis.Item, m.Recyclable)
+
+	binType := mappers.ToBinType(m.Bin)
+	if binType == pb.RecyclingItem_BIN_TYPE_UNKNOWN {
+		s.logger.Warn("Unknown bin type", slog.String("item", analysis.Item))
+	}
+
+	s.logger.Debug("Mapped bin type", slog.String("bin_type", binType.String()))
+
+	binColour := mappers.ToBinColour(m.Bin)
+	if binColour == pb.RecyclingItem_BIN_COLOUR_UNKNOWN {
+		s.logger.Warn("Unknown bin colour for item", slog.String("item", analysis.Item))
+	}
+
+	s.logger.Debug("Mapped bin colour", slog.String("bin_colour", binColour.String()))
 
 	// Map to RecyclingItem
 	item := &pb.RecyclingItem{
 		Recyclable: strings.ToLower(m.Recyclable) == "yes",
 		Advice:     m.Tips,
-		BinColour:  mappers.ToBinColour(m.Bin),
-		BinType:    mappers.ToBinType(m.Bin),
+		BinColour:  binColour,
+		BinType:    binType,
 	}
 
 	return &pb.CanItBeRecycledImageResponse{

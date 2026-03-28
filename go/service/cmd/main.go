@@ -1,11 +1,10 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
+	"log/slog"
 	"net"
+	"os"
 
-	"recycling-service/internal/models"
 	"recycling-service/internal/service"
 	pb "recycling-service/proto"
 
@@ -14,35 +13,29 @@ import (
 )
 
 func main() {
+	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+
 	// Load environment variables
 	if err := godotenv.Load("../../.env.local"); err != nil {
-		log.Printf("Warning: could not load .env.local: %v", err)
-	}
-
-	// Load materials DB
-	var db models.MaterialsDB
-	if err := json.Unmarshal(service.MaterialsJSON, &db); err != nil {
-		log.Fatalf("failed to parse materials: %v", err)
+		logger.Warn("Warning: could not load .env.local", "error", err)
 	}
 
 	// Create a listener on TCP port 50051
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		logger.Error("failed to listen", "error", err)
 	}
 
 	// Create a gRPC server object
 	s := grpc.NewServer()
 
 	// Register the RecyclingService with the server
-	recyclingService := &service.RecyclingServiceServer{
-		Db: db,
-	}
+	recyclingService := service.MakeRecylingService()
 	pb.RegisterRecyclingServiceServer(s, recyclingService)
 
 	// Start serving requests
-	log.Printf("server listening at %v", lis.Addr())
+	logger.Info("server listening at", "address", lis.Addr())
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		logger.Error("failed to serve", "error", err)
 	}
 }
