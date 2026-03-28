@@ -38,6 +38,20 @@ func (db MaterialsDB) LookupMaterials(offTags []string) []Material {
 	return results
 }
 
+func (db MaterialsDB) SearchMaterials(query string) []Material {
+	// Implementation for searching materials by query
+
+	results := []Material{}
+	query = strings.ToLower(strings.TrimSpace(query))
+	for _, material := range db.Materials {
+		if strings.Contains(strings.ToLower(material.Label), query) {
+			results = append(results, material)
+		}
+	}
+
+	return results
+}
+
 func (db MaterialsDB) NormaliseTag(raw string) string {
 	tag := raw
 	for _, prefix := range []string{"en:", "fr:", "de:", "es:"} {

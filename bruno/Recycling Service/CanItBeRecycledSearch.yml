@@ -1,0 +1,15 @@
+info:
+  name: CanItBeRecycledSearch
+  type: grpc
+  seq: 3
+
+grpc:
+  url: "{{baseUrl}}"
+  method: /recycling.RecyclingService/CanItBeRecycledSearch
+  methodType: unary
+  protoFilePath: ../proto/recycling.proto
+  message: |-
+    {
+      "query": "bottle"
+    }
+  auth: inherit
