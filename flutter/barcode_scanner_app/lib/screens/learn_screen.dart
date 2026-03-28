@@ -3,9 +3,14 @@ import '../theme/app_theme.dart';
 
 enum LearnCategory { plastic, glass, paper, metal, electronics, clothing }
 
-class LearnScreen extends StatelessWidget {
+class LearnScreen extends StatefulWidget {
   const LearnScreen({super.key});
 
+  @override
+  State<LearnScreen> createState() => _LearnScreenState();
+}
+
+class _LearnScreenState extends State<LearnScreen> {
   static const _categoryMeta = <LearnCategory, (String, Color, IconData, String)>{
     LearnCategory.plastic: (
       'Plastic',
@@ -45,18 +50,27 @@ class LearnScreen extends StatelessWidget {
     ),
   };
 
+  String _searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
+    // Filter categories based on search query
+    final filteredCategories = LearnCategory.values.where((cat) {
+      final label = _categoryMeta[cat]!.$1.toLowerCase();
+      return label.contains(_searchQuery.toLowerCase());
+    }).toList();
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAF9),
       body: SafeArea(
         child: Column(
           children: [
             _buildHeader(),
+            _buildSearchBar(),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-                children: LearnCategory.values.map((cat) {
+                children: filteredCategories.map((cat) {
                   final (label, color, icon, advice) = _categoryMeta[cat]!;
                   return _categoryCard(label, color, icon, advice);
                 }).toList(),
@@ -107,6 +121,30 @@ class LearnScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: TextField(
+        onChanged: (value) {
+          setState(() {
+            _searchQuery = value;
+          });
+        },
+        decoration: InputDecoration(
+          hintText: 'Search at item to learn...',
+          prefixIcon: const Icon(Icons.search),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide.none,
+          ),
+        ),
       ),
     );
   }
