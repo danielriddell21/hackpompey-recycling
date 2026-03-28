@@ -37,8 +37,9 @@ class _ScannerScreenState extends State<ScannerScreen>
 
     // TODO: Replace with actual endpoint
     _channel = ClientChannel(
-      'your-api-host.example.com',
+      'organisable-luetta-nonblamefully.ngrok-free.dev',
       port: 443,
+      authority: 'organisable-luetta-nonblamefully.ngrok-free.dev',
       options: const ChannelOptions(credentials: ChannelCredentials.secure()),
     );
     _recyclingClient = RecyclingServiceClient(_channel);
