@@ -36,6 +36,14 @@ message CanItBeRecycledResponse {
    RecyclingItem data = 1;
 }
 
+message CanItBeRecycledSearchRequest {
+  string query = 1;
+}
+
+message CanItBeRecycledSearchResponse {
+  repeated RecyclingItem data = 1;
+}
+
 message CanItBeRecycledImageRequest {
   bytes image = 1;
 }
@@ -47,5 +55,6 @@ message CanItBeRecycledImageResponse {
 // Service definition
 service RecyclingService {
   rpc CanItBeRecycled(CanItBeRecycledRequest) returns (CanItBeRecycledResponse);
+  rpc CanItBeRecycledSearch(CanItBeRecycledSearchRequest) returns (CanItBeRecycledSearchResponse);
   rpc CanItBeRecycledImage(CanItBeRecycledImageRequest) returns (CanItBeRecycledImageResponse);
 }

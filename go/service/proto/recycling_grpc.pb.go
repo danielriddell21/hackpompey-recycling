@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RecyclingService_CanItBeRecycled_FullMethodName      = "/recycling.RecyclingService/CanItBeRecycled"
-	RecyclingService_CanItBeRecycledImage_FullMethodName = "/recycling.RecyclingService/CanItBeRecycledImage"
+	RecyclingService_CanItBeRecycled_FullMethodName       = "/recycling.RecyclingService/CanItBeRecycled"
+	RecyclingService_CanItBeRecycledSearch_FullMethodName = "/recycling.RecyclingService/CanItBeRecycledSearch"
+	RecyclingService_CanItBeRecycledImage_FullMethodName  = "/recycling.RecyclingService/CanItBeRecycledImage"
 )
 
 // RecyclingServiceClient is the client API for RecyclingService service.
@@ -30,6 +31,7 @@ const (
 // Service definition
 type RecyclingServiceClient interface {
 	CanItBeRecycled(ctx context.Context, in *CanItBeRecycledRequest, opts ...grpc.CallOption) (*CanItBeRecycledResponse, error)
+	CanItBeRecycledSearch(ctx context.Context, in *CanItBeRecycledSearchRequest, opts ...grpc.CallOption) (*CanItBeRecycledSearchResponse, error)
 	CanItBeRecycledImage(ctx context.Context, in *CanItBeRecycledImageRequest, opts ...grpc.CallOption) (*CanItBeRecycledImageResponse, error)
 }
 
@@ -45,6 +47,16 @@ func (c *recyclingServiceClient) CanItBeRecycled(ctx context.Context, in *CanItB
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CanItBeRecycledResponse)
 	err := c.cc.Invoke(ctx, RecyclingService_CanItBeRecycled_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recyclingServiceClient) CanItBeRecycledSearch(ctx context.Context, in *CanItBeRecycledSearchRequest, opts ...grpc.CallOption) (*CanItBeRecycledSearchResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CanItBeRecycledSearchResponse)
+	err := c.cc.Invoke(ctx, RecyclingService_CanItBeRecycledSearch_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,6 +80,7 @@ func (c *recyclingServiceClient) CanItBeRecycledImage(ctx context.Context, in *C
 // Service definition
 type RecyclingServiceServer interface {
 	CanItBeRecycled(context.Context, *CanItBeRecycledRequest) (*CanItBeRecycledResponse, error)
+	CanItBeRecycledSearch(context.Context, *CanItBeRecycledSearchRequest) (*CanItBeRecycledSearchResponse, error)
 	CanItBeRecycledImage(context.Context, *CanItBeRecycledImageRequest) (*CanItBeRecycledImageResponse, error)
 	mustEmbedUnimplementedRecyclingServiceServer()
 }
@@ -81,6 +94,9 @@ type UnimplementedRecyclingServiceServer struct{}
 
 func (UnimplementedRecyclingServiceServer) CanItBeRecycled(context.Context, *CanItBeRecycledRequest) (*CanItBeRecycledResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CanItBeRecycled not implemented")
+}
+func (UnimplementedRecyclingServiceServer) CanItBeRecycledSearch(context.Context, *CanItBeRecycledSearchRequest) (*CanItBeRecycledSearchResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CanItBeRecycledSearch not implemented")
 }
 func (UnimplementedRecyclingServiceServer) CanItBeRecycledImage(context.Context, *CanItBeRecycledImageRequest) (*CanItBeRecycledImageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CanItBeRecycledImage not implemented")
@@ -124,6 +140,24 @@ func _RecyclingService_CanItBeRecycled_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecyclingService_CanItBeRecycledSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CanItBeRecycledSearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecyclingServiceServer).CanItBeRecycledSearch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecyclingService_CanItBeRecycledSearch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecyclingServiceServer).CanItBeRecycledSearch(ctx, req.(*CanItBeRecycledSearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RecyclingService_CanItBeRecycledImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CanItBeRecycledImageRequest)
 	if err := dec(in); err != nil {
@@ -152,6 +186,10 @@ var RecyclingService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CanItBeRecycled",
 			Handler:    _RecyclingService_CanItBeRecycled_Handler,
+		},
+		{
+			MethodName: "CanItBeRecycledSearch",
+			Handler:    _RecyclingService_CanItBeRecycledSearch_Handler,
 		},
 		{
 			MethodName: "CanItBeRecycledImage",

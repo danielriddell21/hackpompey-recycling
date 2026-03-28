@@ -288,6 +288,94 @@ func (x *CanItBeRecycledResponse) GetData() *RecyclingItem {
 	return nil
 }
 
+type CanItBeRecycledSearchRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Query         string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CanItBeRecycledSearchRequest) Reset() {
+	*x = CanItBeRecycledSearchRequest{}
+	mi := &file_proto_recycling_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CanItBeRecycledSearchRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CanItBeRecycledSearchRequest) ProtoMessage() {}
+
+func (x *CanItBeRecycledSearchRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_recycling_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CanItBeRecycledSearchRequest.ProtoReflect.Descriptor instead.
+func (*CanItBeRecycledSearchRequest) Descriptor() ([]byte, []int) {
+	return file_proto_recycling_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CanItBeRecycledSearchRequest) GetQuery() string {
+	if x != nil {
+		return x.Query
+	}
+	return ""
+}
+
+type CanItBeRecycledSearchResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Data          []*RecyclingItem       `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CanItBeRecycledSearchResponse) Reset() {
+	*x = CanItBeRecycledSearchResponse{}
+	mi := &file_proto_recycling_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CanItBeRecycledSearchResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CanItBeRecycledSearchResponse) ProtoMessage() {}
+
+func (x *CanItBeRecycledSearchResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_recycling_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CanItBeRecycledSearchResponse.ProtoReflect.Descriptor instead.
+func (*CanItBeRecycledSearchResponse) Descriptor() ([]byte, []int) {
+	return file_proto_recycling_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CanItBeRecycledSearchResponse) GetData() []*RecyclingItem {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
 type CanItBeRecycledImageRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Image         []byte                 `protobuf:"bytes,1,opt,name=image,proto3" json:"image,omitempty"`
@@ -297,7 +385,7 @@ type CanItBeRecycledImageRequest struct {
 
 func (x *CanItBeRecycledImageRequest) Reset() {
 	*x = CanItBeRecycledImageRequest{}
-	mi := &file_proto_recycling_proto_msgTypes[3]
+	mi := &file_proto_recycling_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -309,7 +397,7 @@ func (x *CanItBeRecycledImageRequest) String() string {
 func (*CanItBeRecycledImageRequest) ProtoMessage() {}
 
 func (x *CanItBeRecycledImageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_recycling_proto_msgTypes[3]
+	mi := &file_proto_recycling_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -322,7 +410,7 @@ func (x *CanItBeRecycledImageRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CanItBeRecycledImageRequest.ProtoReflect.Descriptor instead.
 func (*CanItBeRecycledImageRequest) Descriptor() ([]byte, []int) {
-	return file_proto_recycling_proto_rawDescGZIP(), []int{3}
+	return file_proto_recycling_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *CanItBeRecycledImageRequest) GetImage() []byte {
@@ -341,7 +429,7 @@ type CanItBeRecycledImageResponse struct {
 
 func (x *CanItBeRecycledImageResponse) Reset() {
 	*x = CanItBeRecycledImageResponse{}
-	mi := &file_proto_recycling_proto_msgTypes[4]
+	mi := &file_proto_recycling_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -353,7 +441,7 @@ func (x *CanItBeRecycledImageResponse) String() string {
 func (*CanItBeRecycledImageResponse) ProtoMessage() {}
 
 func (x *CanItBeRecycledImageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_recycling_proto_msgTypes[4]
+	mi := &file_proto_recycling_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -366,7 +454,7 @@ func (x *CanItBeRecycledImageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CanItBeRecycledImageResponse.ProtoReflect.Descriptor instead.
 func (*CanItBeRecycledImageResponse) Descriptor() ([]byte, []int) {
-	return file_proto_recycling_proto_rawDescGZIP(), []int{4}
+	return file_proto_recycling_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CanItBeRecycledImageResponse) GetData() *RecyclingItem {
@@ -404,13 +492,18 @@ const file_proto_recycling_proto_rawDesc = "" +
 	"\x16CanItBeRecycledRequest\x12\x18\n" +
 	"\abarcode\x18\x01 \x01(\tR\abarcode\"G\n" +
 	"\x17CanItBeRecycledResponse\x12,\n" +
-	"\x04data\x18\x01 \x01(\v2\x18.recycling.RecyclingItemR\x04data\"3\n" +
+	"\x04data\x18\x01 \x01(\v2\x18.recycling.RecyclingItemR\x04data\"4\n" +
+	"\x1cCanItBeRecycledSearchRequest\x12\x14\n" +
+	"\x05query\x18\x01 \x01(\tR\x05query\"M\n" +
+	"\x1dCanItBeRecycledSearchResponse\x12,\n" +
+	"\x04data\x18\x01 \x03(\v2\x18.recycling.RecyclingItemR\x04data\"3\n" +
 	"\x1bCanItBeRecycledImageRequest\x12\x14\n" +
 	"\x05image\x18\x01 \x01(\fR\x05image\"L\n" +
 	"\x1cCanItBeRecycledImageResponse\x12,\n" +
-	"\x04data\x18\x01 \x01(\v2\x18.recycling.RecyclingItemR\x04data2\xd5\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x18.recycling.RecyclingItemR\x04data2\xc1\x02\n" +
 	"\x10RecyclingService\x12X\n" +
-	"\x0fCanItBeRecycled\x12!.recycling.CanItBeRecycledRequest\x1a\".recycling.CanItBeRecycledResponse\x12g\n" +
+	"\x0fCanItBeRecycled\x12!.recycling.CanItBeRecycledRequest\x1a\".recycling.CanItBeRecycledResponse\x12j\n" +
+	"\x15CanItBeRecycledSearch\x12'.recycling.CanItBeRecycledSearchRequest\x1a(.recycling.CanItBeRecycledSearchResponse\x12g\n" +
 	"\x14CanItBeRecycledImage\x12&.recycling.CanItBeRecycledImageRequest\x1a'.recycling.CanItBeRecycledImageResponseB\x19Z\x17recycling-service/protob\x06proto3"
 
 var (
@@ -426,30 +519,35 @@ func file_proto_recycling_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_recycling_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_recycling_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_proto_recycling_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_proto_recycling_proto_goTypes = []any{
-	(RecyclingItem_BinColour)(0),         // 0: recycling.RecyclingItem.BinColour
-	(RecyclingItem_BinType)(0),           // 1: recycling.RecyclingItem.BinType
-	(*RecyclingItem)(nil),                // 2: recycling.RecyclingItem
-	(*CanItBeRecycledRequest)(nil),       // 3: recycling.CanItBeRecycledRequest
-	(*CanItBeRecycledResponse)(nil),      // 4: recycling.CanItBeRecycledResponse
-	(*CanItBeRecycledImageRequest)(nil),  // 5: recycling.CanItBeRecycledImageRequest
-	(*CanItBeRecycledImageResponse)(nil), // 6: recycling.CanItBeRecycledImageResponse
+	(RecyclingItem_BinColour)(0),          // 0: recycling.RecyclingItem.BinColour
+	(RecyclingItem_BinType)(0),            // 1: recycling.RecyclingItem.BinType
+	(*RecyclingItem)(nil),                 // 2: recycling.RecyclingItem
+	(*CanItBeRecycledRequest)(nil),        // 3: recycling.CanItBeRecycledRequest
+	(*CanItBeRecycledResponse)(nil),       // 4: recycling.CanItBeRecycledResponse
+	(*CanItBeRecycledSearchRequest)(nil),  // 5: recycling.CanItBeRecycledSearchRequest
+	(*CanItBeRecycledSearchResponse)(nil), // 6: recycling.CanItBeRecycledSearchResponse
+	(*CanItBeRecycledImageRequest)(nil),   // 7: recycling.CanItBeRecycledImageRequest
+	(*CanItBeRecycledImageResponse)(nil),  // 8: recycling.CanItBeRecycledImageResponse
 }
 var file_proto_recycling_proto_depIdxs = []int32{
 	0, // 0: recycling.RecyclingItem.bin_colour:type_name -> recycling.RecyclingItem.BinColour
 	1, // 1: recycling.RecyclingItem.bin_type:type_name -> recycling.RecyclingItem.BinType
 	2, // 2: recycling.CanItBeRecycledResponse.data:type_name -> recycling.RecyclingItem
-	2, // 3: recycling.CanItBeRecycledImageResponse.data:type_name -> recycling.RecyclingItem
-	3, // 4: recycling.RecyclingService.CanItBeRecycled:input_type -> recycling.CanItBeRecycledRequest
-	5, // 5: recycling.RecyclingService.CanItBeRecycledImage:input_type -> recycling.CanItBeRecycledImageRequest
-	4, // 6: recycling.RecyclingService.CanItBeRecycled:output_type -> recycling.CanItBeRecycledResponse
-	6, // 7: recycling.RecyclingService.CanItBeRecycledImage:output_type -> recycling.CanItBeRecycledImageResponse
-	6, // [6:8] is the sub-list for method output_type
-	4, // [4:6] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	2, // 3: recycling.CanItBeRecycledSearchResponse.data:type_name -> recycling.RecyclingItem
+	2, // 4: recycling.CanItBeRecycledImageResponse.data:type_name -> recycling.RecyclingItem
+	3, // 5: recycling.RecyclingService.CanItBeRecycled:input_type -> recycling.CanItBeRecycledRequest
+	5, // 6: recycling.RecyclingService.CanItBeRecycledSearch:input_type -> recycling.CanItBeRecycledSearchRequest
+	7, // 7: recycling.RecyclingService.CanItBeRecycledImage:input_type -> recycling.CanItBeRecycledImageRequest
+	4, // 8: recycling.RecyclingService.CanItBeRecycled:output_type -> recycling.CanItBeRecycledResponse
+	6, // 9: recycling.RecyclingService.CanItBeRecycledSearch:output_type -> recycling.CanItBeRecycledSearchResponse
+	8, // 10: recycling.RecyclingService.CanItBeRecycledImage:output_type -> recycling.CanItBeRecycledImageResponse
+	8, // [8:11] is the sub-list for method output_type
+	5, // [5:8] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_proto_recycling_proto_init() }
@@ -463,7 +561,7 @@ func file_proto_recycling_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_recycling_proto_rawDesc), len(file_proto_recycling_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

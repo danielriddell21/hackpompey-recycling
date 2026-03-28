@@ -226,6 +226,115 @@ class CanItBeRecycledResponse extends $pb.GeneratedMessage {
   RecyclingItem ensureData() => $_ensure(0);
 }
 
+class CanItBeRecycledSearchRequest extends $pb.GeneratedMessage {
+  factory CanItBeRecycledSearchRequest({
+    $core.String? query,
+  }) {
+    final result = create();
+    if (query != null) result.query = query;
+    return result;
+  }
+
+  CanItBeRecycledSearchRequest._();
+
+  factory CanItBeRecycledSearchRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CanItBeRecycledSearchRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CanItBeRecycledSearchRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'recycling'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'query')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledSearchRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledSearchRequest copyWith(
+          void Function(CanItBeRecycledSearchRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as CanItBeRecycledSearchRequest))
+          as CanItBeRecycledSearchRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledSearchRequest create() =>
+      CanItBeRecycledSearchRequest._();
+  @$core.override
+  CanItBeRecycledSearchRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledSearchRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CanItBeRecycledSearchRequest>(create);
+  static CanItBeRecycledSearchRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get query => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set query($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasQuery() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearQuery() => $_clearField(1);
+}
+
+class CanItBeRecycledSearchResponse extends $pb.GeneratedMessage {
+  factory CanItBeRecycledSearchResponse({
+    $core.Iterable<RecyclingItem>? data,
+  }) {
+    final result = create();
+    if (data != null) result.data.addAll(data);
+    return result;
+  }
+
+  CanItBeRecycledSearchResponse._();
+
+  factory CanItBeRecycledSearchResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CanItBeRecycledSearchResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CanItBeRecycledSearchResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'recycling'),
+      createEmptyInstance: create)
+    ..pPM<RecyclingItem>(1, _omitFieldNames ? '' : 'data',
+        subBuilder: RecyclingItem.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledSearchResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CanItBeRecycledSearchResponse copyWith(
+          void Function(CanItBeRecycledSearchResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as CanItBeRecycledSearchResponse))
+          as CanItBeRecycledSearchResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledSearchResponse create() =>
+      CanItBeRecycledSearchResponse._();
+  @$core.override
+  CanItBeRecycledSearchResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CanItBeRecycledSearchResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CanItBeRecycledSearchResponse>(create);
+  static CanItBeRecycledSearchResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<RecyclingItem> get data => $_getList(0);
+}
+
 class CanItBeRecycledImageRequest extends $pb.GeneratedMessage {
   factory CanItBeRecycledImageRequest({
     $core.List<$core.int>? image,

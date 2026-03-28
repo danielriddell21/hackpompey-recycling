@@ -40,6 +40,13 @@ class RecyclingServiceClient extends $grpc.Client {
     return $createUnaryCall(_$canItBeRecycled, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.CanItBeRecycledSearchResponse> canItBeRecycledSearch(
+    $0.CanItBeRecycledSearchRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$canItBeRecycledSearch, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.CanItBeRecycledImageResponse> canItBeRecycledImage(
     $0.CanItBeRecycledImageRequest request, {
     $grpc.CallOptions? options,
@@ -54,6 +61,11 @@ class RecyclingServiceClient extends $grpc.Client {
           '/recycling.RecyclingService/CanItBeRecycled',
           ($0.CanItBeRecycledRequest value) => value.writeToBuffer(),
           $0.CanItBeRecycledResponse.fromBuffer);
+  static final _$canItBeRecycledSearch = $grpc.ClientMethod<
+          $0.CanItBeRecycledSearchRequest, $0.CanItBeRecycledSearchResponse>(
+      '/recycling.RecyclingService/CanItBeRecycledSearch',
+      ($0.CanItBeRecycledSearchRequest value) => value.writeToBuffer(),
+      $0.CanItBeRecycledSearchResponse.fromBuffer);
   static final _$canItBeRecycledImage = $grpc.ClientMethod<
           $0.CanItBeRecycledImageRequest, $0.CanItBeRecycledImageResponse>(
       '/recycling.RecyclingService/CanItBeRecycledImage',
@@ -75,6 +87,15 @@ abstract class RecyclingServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.CanItBeRecycledRequest.fromBuffer(value),
         ($0.CanItBeRecycledResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CanItBeRecycledSearchRequest,
+            $0.CanItBeRecycledSearchResponse>(
+        'CanItBeRecycledSearch',
+        canItBeRecycledSearch_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.CanItBeRecycledSearchRequest.fromBuffer(value),
+        ($0.CanItBeRecycledSearchResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.CanItBeRecycledImageRequest,
             $0.CanItBeRecycledImageResponse>(
         'CanItBeRecycledImage',
@@ -94,6 +115,15 @@ abstract class RecyclingServiceBase extends $grpc.Service {
 
   $async.Future<$0.CanItBeRecycledResponse> canItBeRecycled(
       $grpc.ServiceCall call, $0.CanItBeRecycledRequest request);
+
+  $async.Future<$0.CanItBeRecycledSearchResponse> canItBeRecycledSearch_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CanItBeRecycledSearchRequest> $request) async {
+    return canItBeRecycledSearch($call, await $request);
+  }
+
+  $async.Future<$0.CanItBeRecycledSearchResponse> canItBeRecycledSearch(
+      $grpc.ServiceCall call, $0.CanItBeRecycledSearchRequest request);
 
   $async.Future<$0.CanItBeRecycledImageResponse> canItBeRecycledImage_Pre(
       $grpc.ServiceCall $call,
